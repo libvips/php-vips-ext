@@ -150,14 +150,6 @@ https://devzone.zend.com/317/extension-writing-part-ii-parameters-arrays-and-zva
 
 https://devzone.zend.com/446/extension-writing-part-iii-resources/
 
-### Documentation
-
-```
-$ pear channel-discover pear.phpdoc.org
-$ pear install phpdoc/phpDocumentor
-$ phpdoc 
-```
-
 ### Packaging
 
 ```
