@@ -163,3 +163,12 @@ $ pear install vips-0.1.0.tgz
 ```
 
 to install.
+
+Add:
+
+```
+extension=vips.so
+```
+
+to your `php.ini`, perhaps in `~/vips/lib/php.ini`, if you configured php as
+above. 
