@@ -1,14 +1,15 @@
 # Low-level PHP binding for libvips 
 
 This extension lets you use the libvips image processing library from PHP. It is
-intentionally very low-level. Modules such as `vips` build a nice API on
+intentionally very low-level. Modules such as
+https://github.com/jcupitt/php-vips try to layer a nice API on
 top of this extension. 
 
 libvips is fast and it can work without needing to have the 
 entire image loaded into memory. Programs that use libvips don't
 manipulate images directly, instead they create pipelines of image processing
-operations building on a source image. When the end of the pipe is connected
-to a destination, the whole pipline executes at once, streaming the image
+operations starting from a source image. When the end of the pipe is connected
+to a destination, the whole pipeline executes at once, streaming the image
 in parallel from source to destination in a set of small fragments. 
 
 See the [benchmarks at the official libvips
@@ -48,7 +49,7 @@ of image. The final argument to `vips_call()` is an array of operation options.
 
 PHP is normally built for speed and is missing a lot of debugging support you
 need for extension development. For testing and dev, build your own php. 
-I used 7.0.10 and configured with:
+I used 7.0.11 and configured with:
 
 ```
 $ ./configure --prefix=/home/john/vips --enable-debug --enable-maintainer-zts \
@@ -126,6 +127,7 @@ if (!extension_loaded("vips")) {
 }
 
 $x = vips_image_new_from_file($argv[1])["out"];
+$x = vips_call("invert", $x)["out"];
 vips_image_write_to_file($x, $argv[2]);
 ?>
 ```
