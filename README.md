@@ -53,7 +53,7 @@ I used 7.0.11 and configured with:
 
 ```
 $ ./configure --prefix=/home/john/vips --enable-debug --enable-maintainer-zts \
-	--enable-cgi --enable-cli --with-readline --with-openssl
+	--enable-cgi --enable-cli --with-readline --with-openssl --with-zlib
 ```
 
 You'll need libvips 8.0 or later, including all the headers for development. 
@@ -158,3 +158,16 @@ $ pear install phpdoc/phpDocumentor
 $ phpdoc 
 ```
 
+### Packaging
+
+```
+$ pear package
+```
+
+to make `vips-0.1.0.tgz`, then:
+
+```
+$ pear install vips-0.1.0.tgz
+```
+
+to install.

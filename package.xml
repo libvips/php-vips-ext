@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<package packagerversion="1.4.11" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0
+http://pear.php.net/dtd/tasks-1.0.xsd
+http://pear.php.net/dtd/package-2.0
+http://pear.php.net/dtd/package-2.0.xsd">
+ <name>vips</name>
+ <channel>pecl.php.net</channel>
+ <summary>PHP extension for interfacing with libvips</summary>
+ <description>
+  This extension uses libvips to provide image processing facilities. 
+ </description>
+ <lead>
+  <name>John Cupitt</name>
+  <user>john</user>
+  <email>jcupitt@gmail.com</email>
+  <active>yes</active>
+ </lead>
+ <date>2016-09-20</date>
+ <version>
+  <release>0.1.0</release>
+  <api>0.1.0</api>
+ </version>
+ <stability>
+  <release>alpha</release>
+  <api>alpha</api>
+ </stability>
+ <license filesource="LICENSE.txt">MIT</license>
+ <notes>
+- First release.
+ </notes>
+ <contents>
+  <dir name="/">
+   <file role='doc' name='API-0.1.0'/>
+   <file role='doc' name='CREDITS'/>
+   <file role='doc' name='EXPERIMENTAL'/>
+   <file role='doc' name='LICENSE.txt'/>
+   <file role='doc' name='README.md'/>
+   <file role='doc' name='RELEASE-0.1.0'/>
+   <file role='doc' name='ChangeLog'/>
+
+   <file role='src' name='config.m4'/>
+   <file role='src' name='config.w32'/>
+   <file role='src' name='php_vips.h'/>
+   <file role='src' name='vips.c'/>
+
+   <dir name="tests">
+    <file role='test' name='001.phpt'/>
+    <file role='test' name='002.phpt'/>
+    <file role='test' name='003.phpt'/>
+    <file role='test' name='004.phpt'/>
+    <file role='test' name='005.phpt'/>
+    <file role='test' name='006.phpt'/>
+    <file role='test' name='007.phpt'/>
+    <file role='test' name='008.phpt'/>
+    <file role='test' name='009.phpt'/>
+    <file role='test' name='010.phpt'/>
+    <file role='test' name='011.phpt'/>
+    <file role='test' name='012.phpt'/>
+    <file role='test' name='013.phpt'/>
+    <file role='test' name='014.phpt'/>
+    <file role='test' name='015.phpt'/>
+    <file role='test' name='016.phpt'/>
+    <file role='test' name='017.phpt'/>
+    <file role='test' name='026.phpt'/>
+    <file role='test' name='027.phpt'/>
+
+     <dir name="images">
+      <file role='test' name='img_0076.jpg'/>
+     </dir>
+  </dir>
+ </dir>
+ </contents>
+ <dependencies>
+  <required>
+   <php>
+    <min>7.0.0</min>
+   </php>
+   <pearinstaller>
+    <min>1.4.0b1</min>
+   </pearinstaller>
+  </required>
+ </dependencies>
+ <providesextension>vips</providesextension>
+ <extsrcrelease>
+  <configureoption name="with-vips" default="yes" prompt="enable vips"/>
+ </extsrcrelease>
+ <changelog>
+   <release>
+   <stability><release>alpha</release><api>alpha</api></stability>
+   <version><release>0.1.0</release><api>0.1.0</api></version>
+   <date>2016-09-20</date>
+   <notes>
+- Initial PECL release
+   </notes>
+  </release>
+ </changelog>
+</package>
