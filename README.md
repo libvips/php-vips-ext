@@ -3,7 +3,7 @@
 This extension lets you use the libvips image processing library from PHP. It is
 intentionally very low-level. Modules such as
 https://github.com/jcupitt/php-vips try to layer a nice API on
-top of this extension. 
+top of this. 
 
 libvips is fast and it can work without needing to have the 
 entire image loaded into memory. Programs that use libvips don't
