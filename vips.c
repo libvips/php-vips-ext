@@ -544,6 +544,26 @@ vips_php_set_value(VipsPhpCall *call, GParamSpec *pspec, zval *zvalue)
 		return -1;
 	}
 
+	/* If we are setting a MODIFY VipsArgument with an image, we need to take a
+	 * copy.
+	 */
+	if (g_type_is_a(pspec_type, VIPS_TYPE_IMAGE)) {
+		VipsImage *image;
+		VipsImage *memory;
+
+		VIPS_DEBUG_MSG("vips_php_set_value: copying image\n");
+		image = (VipsImage *) g_value_get_object(&gvalue);
+		memory = vips_image_new_memory();
+		if (vips_image_write(image, memory)) {
+			g_object_unref(memory);
+			g_value_unset(&gvalue);
+			return -1;
+		}
+		g_value_unset(&gvalue);
+		g_value_init(&gvalue, pspec_type);
+		g_value_take_object(&gvalue, memory);
+	}
+
 #ifdef VIPS_DEBUG
 {
 	char *str_value;
@@ -797,8 +817,11 @@ vips_php_get_required_output(VipsObject *object,
 	VipsPhpCall *call = (VipsPhpCall *) a;
 	zval *return_value = (zval *) b;
 
+	/* We get output objects, and we get input objects that are tagged as
+	 * MODIFY --- they are copied on set, see above.
+	 */
 	if ((argument_class->flags & VIPS_ARGUMENT_REQUIRED) &&
-		(argument_class->flags & VIPS_ARGUMENT_OUTPUT) &&
+		(argument_class->flags & (VIPS_ARGUMENT_OUTPUT| VIPS_ARGUMENT_MODIFY)) &&
 		!(argument_class->flags & VIPS_ARGUMENT_DEPRECATED)) { 
 		const char *name = g_param_spec_get_name(pspec);
 		zval zvalue;
