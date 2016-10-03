@@ -308,9 +308,11 @@ imageize(VipsImage *match_image, zval *constant)
 	if (is_2D(constant)) {
 		return matrix_from_zval(constant);
 	}
-	else {
+	else if (match_image) {
 		return expand_constant(match_image, constant);
 	}
+	else
+		return NULL;
 }
 
 /* Set a gvalue from a php value. 
@@ -552,6 +554,7 @@ vips_php_set_value(VipsPhpCall *call, GParamSpec *pspec, zval *zvalue)
 		VipsImage *memory;
 
 		VIPS_DEBUG_MSG("vips_php_set_value: copying image\n");
+
 		image = (VipsImage *) g_value_get_object(&gvalue);
 		memory = vips_image_new_memory();
 		if (vips_image_write(image, memory)) {
@@ -561,7 +564,7 @@ vips_php_set_value(VipsPhpCall *call, GParamSpec *pspec, zval *zvalue)
 		}
 		g_value_unset(&gvalue);
 		g_value_init(&gvalue, pspec_type);
-		g_value_take_object(&gvalue, memory);
+		g_value_set_object(&gvalue, memory);
 	}
 
 #ifdef VIPS_DEBUG
@@ -967,6 +970,7 @@ vips_php_call_array(const char *operation_name, zval *instance,
 	 */
 	VIPS_DEBUG_MSG("vips_php_call_array: building ...\n");
 	if (vips_cache_operation_buildp(&call->operation)) {
+		VIPS_DEBUG_MSG("vips_php_call_array: call failed!\n");
 		error_vips();
 		vips_object_unref_outputs(VIPS_OBJECT(call->operation));
 		vips_php_call_free(call);
@@ -997,7 +1001,7 @@ vips_php_call_array(const char *operation_name, zval *instance,
 
 	vips_php_call_free(call);
 
-	VIPS_DEBUG_MSG("vips_php_call_array: done!\n");
+	VIPS_DEBUG_MSG("vips_php_call_array: success!\n");
 
 	return 0;
 }

@@ -68,10 +68,10 @@ libvips website, or build your own.
 $ pear package
 ```
 
-to make `vips-0.1.0.tgz`, then:
+to make `vips-0.1.1.tgz`, then:
 
 ```
-$ pear install vips-0.1.0.tgz
+$ pear install vips-0.1.1.tgz
 ```
 
 to install.
