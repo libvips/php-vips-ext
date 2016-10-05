@@ -8,13 +8,13 @@ new_from_buffer works
   $buffer = file_get_contents($filename);
 
   $image = vips_image_new_from_buffer($buffer)["out"];
-  $width1 = vips_image_get($image, "width");
+  $width1 = vips_image_get($image, "width")["out"];
 
   $image = vips_image_new_from_buffer($buffer, "shrink=2")["out"];
-  $width2 = vips_image_get($image, "width");
+  $width2 = vips_image_get($image, "width")["out"];
 
   $image = vips_image_new_from_buffer($buffer, "", ["shrink" => 4])["out"];
-  $width3 = vips_image_get($image, "width");
+  $width3 = vips_image_get($image, "width")["out"];
 
   if ($width1 == 1600 &&
 	$width2 = 800 &&

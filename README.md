@@ -135,7 +135,6 @@ libvips.
 
 Run:
 
-
 ```
 $ make
 ```
@@ -144,14 +143,11 @@ To build the module to the `modules/` directory in this repository.
 
 Don't post php-vips test results to php.net! Stop this with:
 
-
 ```
 $ export NO_INTERACTION=1
 ```
 
-
 Test with:
-
 
 ```
 $ make test

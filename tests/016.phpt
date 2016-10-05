@@ -5,16 +5,16 @@ new_from_array has optional scale and offset
 --FILE--
 <?php 
   $image = vips_image_new_from_array([1, 2, 3]);
-  $scale1 = vips_image_get($image, "scale");
-  $offset1 = vips_image_get($image, "offset");
+  $scale1 = vips_image_get($image, "scale")["out"];
+  $offset1 = vips_image_get($image, "offset")["out"];
 
   $image = vips_image_new_from_array([1, 2, 3], 8);
-  $scale2 = vips_image_get($image, "scale");
-  $offset2 = vips_image_get($image, "offset");
+  $scale2 = vips_image_get($image, "scale")["out"];
+  $offset2 = vips_image_get($image, "offset")["out"];
 
   $image = vips_image_new_from_array([1, 2, 3], 8, 12);
-  $scale3 = vips_image_get($image, "scale");
-  $offset3 = vips_image_get($image, "offset");
+  $scale3 = vips_image_get($image, "scale")["out"];
+  $offset3 = vips_image_get($image, "offset")["out"];
 
   if ($scale1 == 1 &&
 	$offset1 == 0 &&
