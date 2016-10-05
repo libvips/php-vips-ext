@@ -949,8 +949,8 @@ vips_php_call_array(const char *operation_name, zval *instance,
 	}
 	else if (call->argc != call->args_required) {
 		php_error_docref(NULL, E_WARNING, 
-			"operation expects %d arguments, but you supplied %d",
-			call->args_required, call->argc);
+			"operation %s expects %d arguments, but you supplied %d",
+			call->operation_name, call->args_required, call->argc);
 		vips_object_unref_outputs(VIPS_OBJECT(call->operation));
 		vips_php_call_free(call);
 		return -1;
@@ -1423,6 +1423,19 @@ PHP_FUNCTION(vips_image_set)
 }
 /* }}} */
 
+/* {{{ proto string vips_error_buffer()
+   Fetch and clear the vips error buffer */
+PHP_FUNCTION(vips_error_buffer)
+{
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "") == FAILURE) {
+		return;
+	}
+
+	RETVAL_STRING(strdup(vips_error_buffer()));
+	vips_error_clear();
+}
+/* }}} */
+
 /* {{{ php_vips_init_globals
  */
 /* Uncomment this function if you have INI entries
@@ -1565,6 +1578,9 @@ ZEND_BEGIN_ARG_INFO(arginfo_vips_image_set, 0)
 	ZEND_ARG_INFO(0, value)
 ZEND_END_ARG_INFO()
 
+ZEND_BEGIN_ARG_INFO(arginfo_vips_error_buffer, 0)
+ZEND_END_ARG_INFO()
+
 /* {{{ vips_functions[]
  *
  * Every user visible function must have an entry in vips_functions[].
@@ -1579,6 +1595,7 @@ const zend_function_entry vips_functions[] = {
 	PHP_FE(vips_image_get, arginfo_vips_image_get)
 	PHP_FE(vips_image_get_typeof, arginfo_vips_image_get_typeof)
 	PHP_FE(vips_image_set, arginfo_vips_image_set)
+	PHP_FE(vips_error_buffer, arginfo_vips_error_buffer)
 
 	PHP_FE_END	/* Must be the last line in vips_functions[] */
 };

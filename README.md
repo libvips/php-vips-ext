@@ -54,7 +54,7 @@ I used 7.0.11 and configured with:
 ```
 $ ./configure --prefix=/home/john/vips --enable-debug --enable-maintainer-zts \
     --enable-cgi --enable-cli --with-readline --with-openssl --with-zlib \
-    --with-gd --with-jpeg-dir=/usr
+    --with-gd --with-jpeg-dir=/usr --with-libxml-dir=/usr
 ```
 
 You'll need libvips 8.0 or later, including all the headers for

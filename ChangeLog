@@ -3,6 +3,7 @@ vips extension changelog
 Version 0.1.1 (2016-10-03)
 --------------------------
 	* Support draw operations
+	* Add vips_error_buffer()
 
 Version 0.1.0 (2016-09-20)
 --------------------------
