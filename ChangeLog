@@ -6,6 +6,7 @@ Version 0.1.1 (2016-10-03)
 	* Add vips_error_buffer(), remove docref messages
 	* return 0/-1 everywhere for error
 	* vips_image_get() returns ["out" => value] | -1
+	* fix type conversions
 
 Version 0.1.0 (2016-09-20)
 --------------------------

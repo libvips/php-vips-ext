@@ -171,7 +171,6 @@ expand_constant(VipsImage *match_image, zval *constant)
 			ones[i] = 1.0;
 
 			if ((ele = zend_hash_index_find(Z_ARRVAL_P(constant), i)) != NULL) {
-				convert_to_double_ex(ele);
 				offsets[i] = zval_get_double(ele);
 			}
 		}
@@ -183,8 +182,6 @@ expand_constant(VipsImage *match_image, zval *constant)
 		result = x;
 	}
 	else {
-		convert_to_double_ex(constant);
-
 		if (vips_linear1(result, &x, 1.0, zval_get_double(constant), NULL)) {
 			return NULL;
 		}
@@ -274,7 +271,6 @@ matrix_from_zval(zval *array)
 			zval *ele;
 
 			ele = zend_hash_index_find(Z_ARRVAL_P(row), x);
-			convert_to_double_ex(ele);
 			*VIPS_MATRIX(mat, x, y) = zval_get_double(ele);
 		}
 	}
@@ -317,6 +313,7 @@ vips_php_zval_to_gval(VipsImage *match_image, zval *zvalue, GValue *gvalue)
 	GType fundamental = G_TYPE_FUNDAMENTAL(type);
 
 	VipsImage *image;
+	zend_string *zstr;
 	int enum_value;
 
 	switch (fundamental) {
@@ -324,8 +321,9 @@ vips_php_zval_to_gval(VipsImage *match_image, zval *zvalue, GValue *gvalue)
 			/* These are GStrings, vips refstrings are handled by boxed, see 
 			 * below.
 			 */
-			convert_to_string_ex(zvalue);
-			g_value_set_string(gvalue, Z_STRVAL_P(zvalue));
+			zstr = zval_get_string(zvalue);
+			g_value_set_string(gvalue, ZSTR_VAL(zstr));
+			zend_string_release(zstr); 
 			break;
 
 		case G_TYPE_OBJECT:
@@ -346,55 +344,57 @@ vips_php_zval_to_gval(VipsImage *match_image, zval *zvalue, GValue *gvalue)
 			break;
 
 		case G_TYPE_INT:
-			convert_to_long_ex(zvalue);
-			g_value_set_int(gvalue, Z_LVAL_P(zvalue));
+			g_value_set_int(gvalue, zval_get_long(zvalue));
 			break;
 
 		case G_TYPE_UINT64:
-			convert_to_long_ex(zvalue);
-			g_value_set_uint64(gvalue, Z_LVAL_P(zvalue));
+			g_value_set_uint64(gvalue, zval_get_long(zvalue));
 			break;
 
 		case G_TYPE_BOOLEAN:
-			convert_to_boolean(zvalue);
-			g_value_set_boolean(gvalue, Z_LVAL_P(zvalue));
+			g_value_set_boolean(gvalue, zval_get_long(zvalue));
 			break;
 
 		case G_TYPE_ENUM:
 			if (Z_TYPE_P(zvalue) == IS_LONG) {
 				enum_value = Z_LVAL_P(zvalue);
 			}
+			else if (Z_TYPE_P(zvalue) == IS_DOUBLE) {
+				enum_value = Z_DVAL_P(zvalue);
+			}
 			else {
-				convert_to_string_ex(zvalue);
-				if ((enum_value = vips_enum_from_nick("enum", 
-					type, Z_STRVAL_P(zvalue))) < 0 ) {
+				zstr = zval_get_string(zvalue);
+				enum_value = vips_enum_from_nick("enum", type, ZSTR_VAL(zstr));
+				if (enum_value < 0) {
+					zend_string_release(zstr); 
 					return -1;
 				}
+				zend_string_release(zstr); 
 			}
 			g_value_set_enum(gvalue, enum_value);
 			break;
 
 		case G_TYPE_FLAGS:
-			convert_to_long_ex(zvalue);
-			g_value_set_flags(gvalue, Z_LVAL_P(zvalue));
+			g_value_set_flags(gvalue, zval_get_long(zvalue));
 			break;
 
 		case G_TYPE_DOUBLE:
-			convert_to_double_ex(zvalue);
-			g_value_set_double(gvalue, Z_DVAL_P(zvalue));
+			g_value_set_double(gvalue, zval_get_double(zvalue));
 			break;
 
 		case G_TYPE_BOXED:
 			if (type == VIPS_TYPE_REF_STRING) {
-				convert_to_string_ex(zvalue);
-				vips_value_set_ref_string(gvalue, Z_STRVAL_P(zvalue));
+				zstr = zval_get_string(zvalue);
+				vips_value_set_ref_string(gvalue, ZSTR_VAL(zstr));
+				zend_string_release(zstr); 
 			}
 			else if (type == VIPS_TYPE_BLOB) {
 				void *buf;
 
-				convert_to_string_ex(zvalue);
-				buf = g_malloc(Z_STRLEN_P(zvalue));
-				memcpy(buf, Z_STRVAL_P(zvalue), Z_STRLEN_P(zvalue));
+				zstr = zval_get_string(zvalue);
+				buf = g_malloc(ZSTR_LEN(zstr));
+				memcpy(buf, ZSTR_VAL(zstr), ZSTR_LEN(zstr));
+				zend_string_release(zstr); 
 
 				vips_value_set_blob(gvalue, 
 					vips_php_blob_free, buf, Z_STRLEN_P(zvalue));
@@ -418,15 +418,13 @@ vips_php_zval_to_gval(VipsImage *match_image, zval *zvalue, GValue *gvalue)
 					for (i = 0; i < n; i++) {
 						zval *ele;
 
-						if ((ele = zend_hash_index_find(Z_ARRVAL_P(zvalue), 
-							i)) != NULL) {
-							convert_to_long_ex(ele);
+						ele = zend_hash_index_find(Z_ARRVAL_P(zvalue), i);
+						if (ele) { 
 							arr[i] = zval_get_long(ele);
 						}
 					}
 				}
 				else {
-					convert_to_long_ex(zvalue);
 					arr[0] = zval_get_long(zvalue);
 				}
 			}
@@ -449,15 +447,13 @@ vips_php_zval_to_gval(VipsImage *match_image, zval *zvalue, GValue *gvalue)
 					for (i = 0; i < n; i++) {
 						zval *ele;
 
-						if ((ele = zend_hash_index_find(Z_ARRVAL_P(zvalue), 
-							i)) != NULL) {
-							convert_to_double_ex(ele);
+						ele = zend_hash_index_find(Z_ARRVAL_P(zvalue), i);
+						if (ele) { 
 							arr[i] = zval_get_double(ele);
 						}
 					}
 				}
 				else {
-					convert_to_double_ex(zvalue);
 					arr[0] = zval_get_double(zvalue);
 				}
 			}
@@ -481,20 +477,24 @@ vips_php_zval_to_gval(VipsImage *match_image, zval *zvalue, GValue *gvalue)
 					for (i = 0; i < n; i++) {
 						zval *ele;
 
-						if ((ele = zend_hash_index_find(Z_ARRVAL_P(zvalue), 
-							i)) != NULL &&
-							(image = (VipsImage *) 
-								zend_fetch_resource(Z_RES_P(ele),
-									"GObject", le_gobject)) != NULL) {
+						ele = zend_hash_index_find(Z_ARRVAL_P(zvalue), i);
+						if (ele) {
+							image = (VipsImage *) 
+								zend_fetch_resource(
+									Z_RES_P(ele), "GObject", le_gobject);
+						}
+						if (ele && 
+							image) {
 							arr[i] = image;
 							g_object_ref(image);
 						}
 					}
 				}
 				else {
-					if( (image = (VipsImage *) 
-						zend_fetch_resource(Z_RES_P(zvalue),
-							"GObject", le_gobject)) != NULL) {
+					image = (VipsImage *) 
+						zend_fetch_resource(
+							Z_RES_P(zvalue), "GObject", le_gobject);
+					if (image) { 
 						arr[0] = image;
 						g_object_ref(image);
 					}
@@ -1160,8 +1160,9 @@ PHP_FUNCTION(vips_image_new_from_array)
 			zval *ele;
 
 			ele = zend_hash_index_find(Z_ARRVAL_P(array), x);
-			convert_to_double_ex(ele);
-			*VIPS_MATRIX(mat, x, 0) = zval_get_double(ele);
+			if (ele) { 
+				*VIPS_MATRIX(mat, x, 0) = zval_get_double(ele);
+			}
 		}
 	}
 
