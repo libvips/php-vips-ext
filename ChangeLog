@@ -4,9 +4,10 @@ Version 0.1.1 (2016-10-03)
 --------------------------
 	* Support draw operations
 	* Add vips_error_buffer(), remove docref messages
-	* return 0/-1 everywhere for error
-	* vips_image_get() returns ["out" => value] | -1
-	* fix type conversions
+	* Return 0/-1 everywhere for error
+	* Vips_image_get() returns ["out" => value] | -1
+	* Fix type conversions
+	* Add vips_image_remove()
 
 Version 0.1.0 (2016-09-20)
 --------------------------

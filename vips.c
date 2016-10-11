@@ -1397,6 +1397,34 @@ PHP_FUNCTION(vips_image_set)
 }
 /* }}} */
 
+/* {{{ proto long vips_image_remove(resource image, string field)
+   Remove field from image */
+PHP_FUNCTION(vips_image_remove)
+{
+	zval *im;
+	char *field_name;
+	size_t field_name_len;
+	VipsImage *image;
+	GType type;
+
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "rs", 
+		&im, &field_name, &field_name_len) == FAILURE) {
+		RETURN_LONG(-1);
+	}
+
+	if ((image = (VipsImage *)zend_fetch_resource(Z_RES_P(im), 
+		"GObject", le_gobject)) == NULL) {
+		RETURN_LONG(-1);
+	}
+
+	if (!vips_image_remove(image, field_name)) {
+		RETURN_LONG(-1);
+	}
+	
+	RETURN_LONG(0);
+}
+/* }}} */
+
 /* {{{ proto string vips_error_buffer()
    Fetch and clear the vips error buffer */
 PHP_FUNCTION(vips_error_buffer)
@@ -1552,6 +1580,11 @@ ZEND_BEGIN_ARG_INFO(arginfo_vips_image_set, 0)
 	ZEND_ARG_INFO(0, value)
 ZEND_END_ARG_INFO()
 
+ZEND_BEGIN_ARG_INFO(arginfo_vips_image_remove, 0)
+	ZEND_ARG_INFO(0, image)
+	ZEND_ARG_INFO(0, field)
+ZEND_END_ARG_INFO()
+
 ZEND_BEGIN_ARG_INFO(arginfo_vips_error_buffer, 0)
 ZEND_END_ARG_INFO()
 
@@ -1569,6 +1602,7 @@ const zend_function_entry vips_functions[] = {
 	PHP_FE(vips_image_get, arginfo_vips_image_get)
 	PHP_FE(vips_image_get_typeof, arginfo_vips_image_get_typeof)
 	PHP_FE(vips_image_set, arginfo_vips_image_set)
+	PHP_FE(vips_image_remove, arginfo_vips_image_remove)
 	PHP_FE(vips_error_buffer, arginfo_vips_error_buffer)
 
 	PHP_FE_END	/* Must be the last line in vips_functions[] */
