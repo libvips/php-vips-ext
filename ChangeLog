@@ -8,6 +8,8 @@ Version 0.1.1 (2016-10-03)
 	* Vips_image_get() returns ["out" => value] | -1
 	* Fix type conversions
 	* Add vips_image_remove()
+	* Add vips_cache_set_*() 
+	* Add vips_concurrency_set() 
 
 Version 0.1.0 (2016-09-20)
 --------------------------

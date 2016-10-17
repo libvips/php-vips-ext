@@ -1438,6 +1438,62 @@ PHP_FUNCTION(vips_error_buffer)
 }
 /* }}} */
 
+/* {{{ proto void vips_cache_set_max(integer value)
+   Set max number of operations to cache */
+PHP_FUNCTION(vips_cache_set_max)
+{
+	long value;
+
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "l", &value) == FAILURE) {
+		return;
+	}
+
+	vips_cache_set_max(value); 
+}
+/* }}} */
+
+/* {{{ proto void vips_cache_set_max_mem(integer value)
+   Set max memory to use for operation cache */
+PHP_FUNCTION(vips_cache_set_max_mem)
+{
+	long value;
+
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "l", &value) == FAILURE) {
+		return;
+	}
+
+	vips_cache_set_max_mem(value); 
+}
+/* }}} */
+
+/* {{{ proto void vips_cache_set_max_files(integer value)
+   Set max number of open files for operation cache */
+PHP_FUNCTION(vips_cache_set_max_files)
+{
+	long value;
+
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "l", &value) == FAILURE) {
+		return;
+	}
+
+	vips_cache_set_max_files(value); 
+}
+/* }}} */
+
+/* {{{ proto void vips_concurrency_set(integer value)
+   Set number of workers per threadpool */
+PHP_FUNCTION(vips_concurrency_set)
+{
+	long value;
+
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "l", &value) == FAILURE) {
+		return;
+	}
+
+	vips_concurrency_set(value); 
+}
+/* }}} */
+
 /* {{{ php_vips_init_globals
  */
 /* Uncomment this function if you have INI entries
@@ -1588,6 +1644,22 @@ ZEND_END_ARG_INFO()
 ZEND_BEGIN_ARG_INFO(arginfo_vips_error_buffer, 0)
 ZEND_END_ARG_INFO()
 
+ZEND_BEGIN_ARG_INFO(arginfo_vips_cache_set_max, 0)
+	ZEND_ARG_INFO(0, value)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO(arginfo_vips_cache_set_max_mem, 0)
+	ZEND_ARG_INFO(0, value)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO(arginfo_vips_cache_set_max_files, 0)
+	ZEND_ARG_INFO(0, value)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO(arginfo_vips_concurrency_set, 0)
+	ZEND_ARG_INFO(0, value)
+ZEND_END_ARG_INFO()
+
 /* {{{ vips_functions[]
  *
  * Every user visible function must have an entry in vips_functions[].
@@ -1604,6 +1676,10 @@ const zend_function_entry vips_functions[] = {
 	PHP_FE(vips_image_set, arginfo_vips_image_set)
 	PHP_FE(vips_image_remove, arginfo_vips_image_remove)
 	PHP_FE(vips_error_buffer, arginfo_vips_error_buffer)
+	PHP_FE(vips_cache_set_max, arginfo_vips_cache_set_max)
+	PHP_FE(vips_cache_set_max_mem, arginfo_vips_cache_set_max_mem)
+	PHP_FE(vips_cache_set_max_files, arginfo_vips_cache_set_max_files)
+	PHP_FE(vips_concurrency_set, arginfo_vips_concurrency_set)
 
 	PHP_FE_END	/* Must be the last line in vips_functions[] */
 };
