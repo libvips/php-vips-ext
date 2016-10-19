@@ -1254,6 +1254,7 @@ PHP_FUNCTION(vips_image_get)
 	VipsImage *image;
 	GValue gvalue = { 0 };
 	zval zvalue;
+	GParamSpec *pspec;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS(), "rs", 
 		&im, &field_name, &field_name_len) == FAILURE) {
@@ -1265,7 +1266,20 @@ PHP_FUNCTION(vips_image_get)
 		RETURN_LONG(-1);
 	}
 
-	if (vips_image_get(image, field_name, &gvalue)) {
+	/* Ugly: older libvipses would return enums from the true header fields 
+	 * (eg. ->interpretation) as ints, but we want to send a string back
+	 * for things like this.
+	 *
+	 * Test if field_name exists as a regular glib property and if it does, use
+	 * g_object_get(). Otherwise use vips_image_get(), since it can read extra
+	 * image metadata.
+	 */
+	if ((pspec = g_object_class_find_property(G_OBJECT_GET_CLASS(image), 
+		field_name))) {
+		g_value_init(&gvalue, G_PARAM_SPEC_VALUE_TYPE(pspec));
+		g_object_get_property(G_OBJECT(image), field_name, &gvalue);
+	} 
+	else if (vips_image_get(image, field_name, &gvalue)) {
 		RETURN_LONG(-1);
 	}
 
