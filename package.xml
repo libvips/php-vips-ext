@@ -15,7 +15,7 @@ http://pear.php.net/dtd/package-2.0.xsd">
   <email>jcupitt@gmail.com</email>
   <active>yes</active>
  </lead>
- <date>2016-10-03</date>
+ <date>2016-10-20</date>
  <version>
   <release>0.1.1</release>
   <api>0.1.1</api>
@@ -89,9 +89,17 @@ http://pear.php.net/dtd/package-2.0.xsd">
    <release>
    <stability><release>alpha</release><api>alpha</api></stability>
    <version><release>0.1.1</release><api>0.1.1</api></version>
-   <date>2016-10-03</date>
+   <date>2016-10-20</date>
    <notes>
-- add support for draw calls
+	* Support draw operations
+	* Add vips_error_buffer(), remove docref messages
+	* Return 0/-1 everywhere for error
+	* vips_image_get() returns ["out" => value] | -1
+	* vips_image_get() returns built-in enums as strings
+	* Fix type conversions
+	* Add vips_image_remove()
+	* Add vips_cache_set_*() 
+	* Add vips_concurrency_set() 
    </notes>
   </release>
 
