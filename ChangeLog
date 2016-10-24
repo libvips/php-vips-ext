@@ -1,5 +1,10 @@
 vips extension changelog
 
+Version 0.1.2 (2016-10-24)
+--------------------------
+	* Always dereference REFERENCE zvalues
+	* More robust value type checking
+
 Version 0.1.1 (2016-10-20)
 --------------------------
 	* Support draw operations

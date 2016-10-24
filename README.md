@@ -65,7 +65,7 @@ libvips website, or build your own.
 ### Installing
 
 ```
-$ pear install vips-0.1.1.tgz
+$ pear install vips-0.1.2.tgz
 ```
 
 to install.
@@ -110,7 +110,7 @@ See `examples/`.
 $ pear package
 ```
 
-to make `vips-0.1.1.tgz`.
+to make `vips-0.1.2.tgz`.
 
 To install by hand:
 

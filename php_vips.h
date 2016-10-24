@@ -5,7 +5,7 @@
 extern zend_module_entry vips_module_entry;
 #define phpext_vips_ptr &vips_module_entry
 
-#define PHP_VIPS_VERSION "0.1.1" /* Replace with version number for your extension */
+#define PHP_VIPS_VERSION "0.1.2" /* Replace with version number for your extension */
 
 #ifdef PHP_WIN32
 #	define PHP_VIPS_API __declspec(dllexport)

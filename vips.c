@@ -106,26 +106,44 @@ vips_php_call_new(const char *operation_name, zval *instance,
 	return call;
 }
 
-static void
-vips_php_analyze_arg(VipsPhpCall *call, zval *arg)
+/* Get a non-reference zval. In php7, zvalues can be references to other zvals
+ * ... chase down a chain of refs to get a real zval.
+ * the ref pointer chain.
+ */
+static inline zval *
+zval_get_nonref(zval *zvalue)
 {
-	if (Z_TYPE_P(arg) == IS_ARRAY) {
-		const int n = zend_hash_num_elements(Z_ARRVAL_P(arg));
+	while (Z_TYPE_P(zvalue) == IS_REFERENCE)
+		zvalue = Z_REFVAL_P(zvalue);
+
+	return zvalue;
+}
+
+/* First pass over our arguments: find the first image arg and note as
+ * match_image.
+ */
+static void
+vips_php_analyze_arg(VipsPhpCall *call, zval *zvalue)
+{
+	zvalue = zval_get_nonref(zvalue); 
+
+	if (Z_TYPE_P(zvalue) == IS_ARRAY) {
+		const int n = zend_hash_num_elements(Z_ARRVAL_P(zvalue));
 
 		int i;
 
 		for (i = 0; i < n; i++) { 
-			zval *item = zend_hash_index_find(Z_ARRVAL_P(arg), i);
+			zval *item = zend_hash_index_find(Z_ARRVAL_P(zvalue), i);
 
 			if (item) {
 				vips_php_analyze_arg(call, item);
 			}
 		}
 	}
-	else if (Z_TYPE_P(arg) == IS_RESOURCE) {
+	else if (Z_TYPE_P(zvalue) == IS_RESOURCE) {
 		VipsImage *image;
 
-		if( (image = (VipsImage *)zend_fetch_resource(Z_RES_P(arg), 
+		if( (image = (VipsImage *)zend_fetch_resource(Z_RES_P(zvalue), 
 			"GObject", le_gobject)) != NULL) {
 			if (!call->match_image) {
 				call->match_image = image;
@@ -154,6 +172,8 @@ expand_constant(VipsImage *match_image, zval *constant)
 	if (vips_black(&result, 1, 1, NULL)) {
 		return NULL;
 	}
+
+	constant = zval_get_nonref(constant); 
 
 	if (Z_TYPE_P(constant) == IS_ARRAY) {
 		const int n = zend_hash_num_elements(Z_ARRVAL_P(constant));
@@ -222,12 +242,15 @@ is_2D(zval *array)
 	int width;
 	int y;
 
+	array = zval_get_nonref(array); 
+
 	if (Z_TYPE_P(array) != IS_ARRAY) {
 		return FALSE;
 	}
 
 	height = zend_hash_num_elements(Z_ARRVAL_P(array));
 	if ((row = zend_hash_index_find(Z_ARRVAL_P(array), 0)) == NULL ||
+		!(row = zval_get_nonref(row)) || 
 		Z_TYPE_P(row) != IS_ARRAY) { 
 		return FALSE;
 	}
@@ -235,6 +258,7 @@ is_2D(zval *array)
 
 	for (y = 1; y < height; y++) {
 		if ((row = zend_hash_index_find(Z_ARRVAL_P(array), y)) == NULL ||
+			!(row = zval_get_nonref(row)) ||
 			Z_TYPE_P(row) != IS_ARRAY ||
 			zend_hash_num_elements(Z_ARRVAL_P(row)) != width) {
 			return FALSE;
@@ -256,14 +280,18 @@ matrix_from_zval(zval *array)
 	VipsImage *mat;
 	int x, y;
 
+	array = zval_get_nonref(array); 
+
 	height = zend_hash_num_elements(Z_ARRVAL_P(array));
 	row = zend_hash_index_find(Z_ARRVAL_P(array), 0);
+	row = zval_get_nonref(row); 
 	g_assert(Z_TYPE_P(row) == IS_ARRAY);
 	width = zend_hash_num_elements(Z_ARRVAL_P(row));
 	mat = vips_image_new_matrix(width, height);
 
 	for (y = 0; y < height; y++) {
 		row = zend_hash_index_find(Z_ARRVAL_P(array), y);
+		row = zval_get_nonref(row); 
 		g_assert(Z_TYPE_P(row) == IS_ARRAY);
 		g_assert(zend_hash_num_elements(Z_ARRVAL_P(row)) == width);
 
@@ -278,20 +306,82 @@ matrix_from_zval(zval *array)
 	return mat;
 }
 
-/* Turn a zval into an image. A 2D array of numbers becomes a matrix image, a
- * 1D array or a simple constant is expanded to match @match_image.
+/* Turn a zval into an image. An image stays an image, a 2D array of numbers 
+ * becomes a matrix image, a 1D array or a simple constant is expanded to 
+ * match @match_image.
  */
 static VipsImage *
-imageize(VipsImage *match_image, zval *constant)
+imageize(VipsImage *match_image, zval *zvalue)
 {
-	if (is_2D(constant)) {
-		return matrix_from_zval(constant);
+	VipsImage *image;
+
+	zvalue = zval_get_nonref(zvalue); 
+
+	if (Z_TYPE_P(zvalue) == IS_RESOURCE &&
+		(image = (VipsImage *) 
+			zend_fetch_resource(Z_RES_P(zvalue), "GObject", le_gobject))) { 
+		return image;
+	}
+	else if (is_2D(zvalue)) {
+		return matrix_from_zval(zvalue);
 	}
 	else if (match_image) {
-		return expand_constant(match_image, constant);
+		return expand_constant(match_image, zvalue);
 	}
-	else
+	else {
+		php_error_docref(NULL, E_WARNING, "not a VipsImage");
 		return NULL;
+	}
+}
+
+static int
+zval_to_array_image(VipsImage *match_image, zval *zvalue, GValue *gvalue)
+{
+	VipsImage **arr;
+	VipsImage *image;
+	int n;
+	int i;
+
+	zvalue = zval_get_nonref(zvalue); 
+
+	if (Z_TYPE_P(zvalue) == IS_ARRAY) {
+		n = zend_hash_num_elements(Z_ARRVAL_P(zvalue));
+	}
+	else {
+		n = 1;
+	}
+
+	vips_value_set_array_image(gvalue, n);
+	arr = vips_value_get_array_image(gvalue, NULL);
+
+	if (Z_TYPE_P(zvalue) == IS_ARRAY) {
+		for (i = 0; i < n; i++) {
+			zval *ele;
+
+			ele = zend_hash_index_find(Z_ARRVAL_P(zvalue), i);
+			if (!ele) {
+				php_error_docref(NULL, E_WARNING, "element missing from array");
+				return -1;
+			}
+
+			if (!(image = imageize(match_image, ele))) {
+				return -1;
+			}
+
+			arr[i] = image;
+			g_object_ref(image);
+		}
+	}
+	else {
+		if (!(image = imageize(match_image, zvalue))) {
+			return -1;
+		}
+
+		arr[0] = image;
+		g_object_ref(image);
+	}
+
+	return 0;
 }
 
 /* Set a gvalue from a php value. 
@@ -327,19 +417,9 @@ vips_php_zval_to_gval(VipsImage *match_image, zval *zvalue, GValue *gvalue)
 			break;
 
 		case G_TYPE_OBJECT:
-			if (Z_TYPE_P(zvalue) == IS_RESOURCE) {
-			   if ((image = (VipsImage *)zend_fetch_resource(Z_RES_P(zvalue), 
-					"GObject", le_gobject)) == NULL) {
-					php_error_docref(NULL, E_WARNING, "not a VipsImage");
-					return -1;
-				}
+			if (!(image = imageize(match_image, zvalue))) {
+				return -1;
 			}
-			else {
-				if (!(image = imageize(match_image, zvalue))) {
-					return -1;
-				}
-			}
-
 			g_value_set_object(gvalue, image);
 			break;
 
@@ -356,6 +436,8 @@ vips_php_zval_to_gval(VipsImage *match_image, zval *zvalue, GValue *gvalue)
 			break;
 
 		case G_TYPE_ENUM:
+			zvalue = zval_get_nonref(zvalue); 
+
 			if (Z_TYPE_P(zvalue) == IS_LONG) {
 				enum_value = Z_LVAL_P(zvalue);
 			}
@@ -391,6 +473,8 @@ vips_php_zval_to_gval(VipsImage *match_image, zval *zvalue, GValue *gvalue)
 			else if (type == VIPS_TYPE_BLOB) {
 				void *buf;
 
+				zvalue = zval_get_nonref(zvalue); 
+
 				zstr = zval_get_string(zvalue);
 				buf = g_malloc(ZSTR_LEN(zstr));
 				memcpy(buf, ZSTR_VAL(zstr), ZSTR_LEN(zstr));
@@ -403,6 +487,8 @@ vips_php_zval_to_gval(VipsImage *match_image, zval *zvalue, GValue *gvalue)
 				int *arr;
 				int n;
 				int i;
+
+				zvalue = zval_get_nonref(zvalue); 
 
 				if (Z_TYPE_P(zvalue) == IS_ARRAY) {
 					n = zend_hash_num_elements(Z_ARRVAL_P(zvalue));
@@ -433,6 +519,8 @@ vips_php_zval_to_gval(VipsImage *match_image, zval *zvalue, GValue *gvalue)
 				int n;
 				int i;
 
+				zvalue = zval_get_nonref(zvalue); 
+
 				if (Z_TYPE_P(zvalue) == IS_ARRAY) {
 					n = zend_hash_num_elements(Z_ARRVAL_P(zvalue));
 				}
@@ -458,46 +546,8 @@ vips_php_zval_to_gval(VipsImage *match_image, zval *zvalue, GValue *gvalue)
 				}
 			}
 			else if (type == VIPS_TYPE_ARRAY_IMAGE) {
-				VipsImage **arr;
-				VipsImage *image;
-				int n;
-				int i;
-
-				if (Z_TYPE_P(zvalue) == IS_ARRAY) {
-					n = zend_hash_num_elements(Z_ARRVAL_P(zvalue));
-				}
-				else {
-					n = 1;
-				}
-
-				vips_value_set_array_image(gvalue, n);
-				arr = vips_value_get_array_image(gvalue, NULL);
-
-				if (Z_TYPE_P(zvalue) == IS_ARRAY) {
-					for (i = 0; i < n; i++) {
-						zval *ele;
-
-						ele = zend_hash_index_find(Z_ARRVAL_P(zvalue), i);
-						if (ele) {
-							image = (VipsImage *) 
-								zend_fetch_resource(
-									Z_RES_P(ele), "GObject", le_gobject);
-						}
-						if (ele && 
-							image) {
-							arr[i] = image;
-							g_object_ref(image);
-						}
-					}
-				}
-				else {
-					image = (VipsImage *) 
-						zend_fetch_resource(
-							Z_RES_P(zvalue), "GObject", le_gobject);
-					if (image) { 
-						arr[0] = image;
-						g_object_ref(image);
-					}
+				if (zval_to_array_image(match_image, zvalue, gvalue)) {
+					return -1;
 				}
 			}
 			else {
@@ -615,7 +665,9 @@ vips_php_set_optional_input(VipsPhpCall *call, zval *options)
 
 	VIPS_DEBUG_MSG("vips_php_set_optional_input:\n");
 
-	ZEND_HASH_FOREACH_STR_KEY_VAL(Z_ARRVAL_P(call->options), key, value) {
+	options = zval_get_nonref(options); 
+
+	ZEND_HASH_FOREACH_STR_KEY_VAL(Z_ARRVAL_P(options), key, value) {
 		char *name;
 		GParamSpec *pspec;
 		VipsArgumentClass *argument_class;
@@ -827,7 +879,9 @@ vips_php_get_optional_output(VipsPhpCall *call, zval *options,
 
 	VIPS_DEBUG_MSG("vips_php_get_optional_output:\n");
 
-	ZEND_HASH_FOREACH_STR_KEY_VAL(Z_ARRVAL_P(call->options), key, value) {
+	options = zval_get_nonref(options); 
+
+	ZEND_HASH_FOREACH_STR_KEY_VAL(Z_ARRVAL_P(options), key, value) {
 		char *name;
 		GParamSpec *pspec;
 		VipsArgumentClass *argument_class;
@@ -1353,10 +1407,14 @@ PHP_FUNCTION(vips_image_set)
 
 		type = 0;
 
+		zvalue = zval_get_nonref(zvalue); 
+
 		switch (Z_TYPE_P(zvalue)) {
 			case IS_ARRAY:
 				if ((ele = zend_hash_index_find(Z_ARRVAL_P(zvalue), 
 					0)) != NULL) {
+					ele = zval_get_nonref(ele); 
+
 					switch (Z_TYPE_P(ele)) {
 						case IS_RESOURCE:
 							type = VIPS_TYPE_ARRAY_IMAGE;
