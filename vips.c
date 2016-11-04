@@ -566,7 +566,8 @@ vips_php_zval_to_gval(VipsImage *match_image, zval *zvalue, GValue *gvalue)
 }
 
 static int
-vips_php_set_value(VipsPhpCall *call, GParamSpec *pspec, zval *zvalue)
+vips_php_set_value(VipsPhpCall *call, 
+	GParamSpec *pspec, VipsArgumentFlags flags, zval *zvalue)
 {
 	const char *name = g_param_spec_get_name(pspec);
 	GType pspec_type = G_PARAM_SPEC_VALUE_TYPE(pspec);
@@ -581,7 +582,8 @@ vips_php_set_value(VipsPhpCall *call, GParamSpec *pspec, zval *zvalue)
 	/* If we are setting a MODIFY VipsArgument with an image, we need to take a
 	 * copy.
 	 */
-	if (g_type_is_a(pspec_type, VIPS_TYPE_IMAGE)) {
+	if (g_type_is_a(pspec_type, VIPS_TYPE_IMAGE) &&
+		(flags & VIPS_ARGUMENT_MODIFY)) {
 		VipsImage *image;
 		VipsImage *memory;
 
@@ -647,7 +649,7 @@ vips_php_set_required_input(VipsObject *object,
 		}
 				
 		if (arg &&
-			vips_php_set_value(call, pspec, arg)) {
+			vips_php_set_value(call, pspec, argument_class->flags, arg)) {
 			return call;
 		}
 	}
@@ -686,7 +688,7 @@ vips_php_set_optional_input(VipsPhpCall *call, zval *options)
 		if (!(argument_class->flags & VIPS_ARGUMENT_REQUIRED) &&
 			(argument_class->flags & VIPS_ARGUMENT_INPUT) &&
 			!(argument_class->flags & VIPS_ARGUMENT_DEPRECATED) &&
-			vips_php_set_value(call, pspec, value)) {
+			vips_php_set_value(call, pspec, argument_class->flags, value)) {
 			return -1;
 		}
 	} ZEND_HASH_FOREACH_END();
@@ -891,6 +893,12 @@ vips_php_get_optional_output(VipsPhpCall *call, zval *options,
 			continue;
 		}
 
+		/* value should always be TRUE.
+		 */
+		if (Z_TYPE_P(value) != IS_TRUE) {
+			continue;
+		}
+
 		name = ZSTR_VAL(key);
 		if (vips_object_get_argument(VIPS_OBJECT(call->operation), name,
 			&pspec, &argument_class, &argument_instance)) {
@@ -1046,7 +1054,6 @@ PHP_FUNCTION(vips_call)
 	char *operation_name;
 	size_t operation_name_len;
 	zval *instance;
-	int i;
 
 	VIPS_DEBUG_MSG("vips_call:\n");
 
@@ -1182,7 +1189,7 @@ PHP_FUNCTION(vips_image_new_from_array)
 	int width;
 	int height;
 	VipsImage *mat;
-	int x, y;
+	int x;
 	zval *row;
 
 	VIPS_DEBUG_MSG("vips_image_new_from_array:\n");
@@ -1237,6 +1244,8 @@ PHP_FUNCTION(vips_image_write_to_file)
 	zval *options = NULL;
 	VipsImage *image;
 
+	VIPS_DEBUG_MSG("vips_image_write_to_file:\n");
+
 	if (zend_parse_parameters(ZEND_NUM_ARGS(), "rp|a", 
 		&IM, &filename, &filename_len, &options) == FAILURE) {
 		RETURN_LONG(-1);
@@ -1246,6 +1255,8 @@ PHP_FUNCTION(vips_image_write_to_file)
 		"GObject", le_gobject)) == NULL) {
 		RETURN_LONG(-1);
 	}
+
+	VIPS_DEBUG_MSG("\t%p -> %s\n", image, filename);
 
 	if (vips_image_write_to_file(image, filename, NULL)) {
 		RETURN_LONG(-1);
@@ -1477,7 +1488,6 @@ PHP_FUNCTION(vips_image_remove)
 	char *field_name;
 	size_t field_name_len;
 	VipsImage *image;
-	GType type;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS(), "rs", 
 		&im, &field_name, &field_name_len) == FAILURE) {
@@ -1606,6 +1616,12 @@ PHP_MINIT_FUNCTION(vips)
 	le_gobject = zend_register_list_destructors_ex(php_free_gobject, 
 		NULL, "GObject", module_number);
 
+#ifdef VIPS_DEBUG
+	printf( "php-vips-ext init\n" );
+	printf( "enabling vips leak testing ...\n" );
+	vips_leak_set( TRUE ); 
+#endif /*VIPS_DEBUG*/
+
 	return SUCCESS;
 }
 /* }}} */
@@ -1617,6 +1633,10 @@ PHP_MSHUTDOWN_FUNCTION(vips)
 	/* uncomment this line if you have INI entries
 	UNREGISTER_INI_ENTRIES();
 	*/
+
+#ifdef VIPS_DEBUG
+	printf( "php-vips-ext shutdown\n" );
+#endif /*VIPS_DEBUG*/
 
 	vips_shutdown();
 
