@@ -39,7 +39,7 @@ https://github.com/jcupitt/php-vips
 
 ### Installing
 
-On OS X, use `brew install php70-vips` to install the libvips library, php and 
+On macOS, use `brew install php70-vips` to install the libvips library, php and 
 this php extension. 
 
 On Linux, install this extension with:
@@ -69,7 +69,7 @@ $ ./configure --prefix=/home/john/vips --enable-debug --enable-maintainer-zts \
 ```
 
 You'll need libvips 8.0 or later, including all the headers for
-development.  On linux, install with your package manager.  On OS X,
+development.  On linux, install with your package manager.  On macOS,
 install with `brew` or MacPorts. For Windows, download a zip from the
 libvips website, or build your own.
 
