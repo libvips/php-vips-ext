@@ -128,7 +128,7 @@ Finally, install to your php extensions area with:
 $ make install
 ```
 
-Add `extension-vips.so` to `php.ini`, perhaps in `~/vips/lib/php.ini`, 
+Add `extension=vips.so` to `php.ini`, perhaps in `~/vips/lib/php.ini`, 
 if you configured php as above. 
 
 ### Links
