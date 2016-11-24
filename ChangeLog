@@ -1,5 +1,9 @@
 vips extension changelog
 
+Version 1.0.0 (2016-11-24)
+--------------------------
+	* Update package for pecl upload
+
 Version 0.1.3 (2016-11-04)
 --------------------------
 	* Fix memleak

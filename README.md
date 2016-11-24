@@ -39,13 +39,13 @@ https://github.com/jcupitt/php-vips
 
 ### Installing
 
-On macOS, use `brew install php70-vips` to install the libvips library, php and 
-this php extension. 
+First install the libvips library. It will be in your package manager on linux,
+it's in brew and MacPorts on macOS, or the vips website has Windows binaries.
 
-On Linux, install this extension with:
+Next, install this extension:
 
 ```
-$ pear install vips-0.1.3.tgz
+$ pecl install vips
 ```
 
 And add:
@@ -55,6 +55,18 @@ extension=vips.so
 ```
 
 to your `php.ini`.
+
+Finally, add `vips` to your `composer.json` to pull in the high-level PHP API. 
+
+```
+    "require": {
+            "jcupitt/vips" : "1.0.0"
+    }
+```
+
+The high-level API has all the documentation, see:
+
+https://github.com/jcupitt/php-vips
 
 ### Development: preparation
 
@@ -79,7 +91,7 @@ libvips website, or build your own.
 $ pear package
 ```
 
-to make `vips-0.1.3.tgz`.
+to make `vips-1.0.0.tgz`.
 
 To install by hand:
 
