@@ -893,8 +893,9 @@ vips_php_get_optional_output(VipsPhpCall *call, zval *options,
 			continue;
 		}
 
-		/* value should always be TRUE.
+		/* value should always be TRUE. 
 		 */
+		value = zval_get_nonref(value); 
 		if (Z_TYPE_P(value) != IS_TRUE) {
 			continue;
 		}

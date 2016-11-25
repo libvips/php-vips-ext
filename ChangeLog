@@ -1,5 +1,9 @@
 vips extension changelog
 
+Version 1.0.1 (2016-11-25)
+--------------------------
+	* Fix for 7.1rc6
+
 Version 1.0.0 (2016-11-24)
 --------------------------
 	* Update package for pecl upload

@@ -15,9 +15,9 @@ http://pear.php.net/dtd/package-2.0.xsd">
   <email>jcupitt@php.net</email>
   <active>yes</active>
  </lead>
- <date>2016-11-24</date>
+ <date>2016-11-25</date>
  <version>
-  <release>1.0.0</release>
+  <release>1.0.1</release>
   <api>1.0.0</api>
  </version>
  <stability>
@@ -34,7 +34,7 @@ http://pear.php.net/dtd/package-2.0.xsd">
    <file role='doc' name='CREDITS'/>
    <file role='doc' name='LICENSE.txt'/>
    <file role='doc' name='README.md'/>
-   <file role='doc' name='RELEASE-1.0.0'/>
+   <file role='doc' name='RELEASE-1.0.1'/>
    <file role='doc' name='ChangeLog'/>
 
    <file role='src' name='config.m4'/>
@@ -87,6 +87,15 @@ http://pear.php.net/dtd/package-2.0.xsd">
   <configureoption name="with-vips" default="yes" prompt="enable vips"/>
  </extsrcrelease>
  <changelog>
+
+   <release>
+   <stability><release>stable</release><api>stable</api></stability>
+   <version><release>1.0.1</release><api>1.0.0</api></version>
+   <date>2016-11-25</date>
+   <notes>
+	* Fix with 7.1rc6
+   </notes>
+  </release>
 
    <release>
    <stability><release>stable</release><api>stable</api></stability>
