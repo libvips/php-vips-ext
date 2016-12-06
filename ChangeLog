@@ -1,8 +1,12 @@
 vips extension changelog
 
-Version 1.0.1 (2016-12-06)
+Version 1.0.2 (2016-12-06)
 --------------------------
 	* vips_image_write_to_file() was not setting options, see #3
+
+Version 1.0.1 (2016-11-25)
+--------------------------
+	* Fix for 7.1rc6
 
 Version 1.0.0 (2016-11-24)
 --------------------------
