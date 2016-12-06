@@ -3,8 +3,8 @@
  */
 
 /* Uncomment for some logging.
-#define VIPS_DEBUG
  */
+#define VIPS_DEBUG
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -1243,6 +1243,11 @@ PHP_FUNCTION(vips_image_write_to_file)
 	size_t filename_len;
 	zval *options = NULL;
 	VipsImage *image;
+	char path_string[VIPS_PATH_MAX];
+	char option_string[VIPS_PATH_MAX];
+	const char *operation_name;
+	zval argv[2];
+	int argc;
 
 	VIPS_DEBUG_MSG("vips_image_write_to_file:\n");
 
@@ -1258,11 +1263,25 @@ PHP_FUNCTION(vips_image_write_to_file)
 
 	VIPS_DEBUG_MSG("\t%p -> %s\n", image, filename);
 
-	if (vips_image_write_to_file(image, filename, NULL)) {
+	vips__filename_split8(filename, path_string, option_string);
+	if (!(operation_name = vips_foreign_find_save(path_string))) {
 		RETURN_LONG(-1);
 	}
 
-	RETURN_LONG(0);
+	ZVAL_STRINGL(&argv[0], filename, filename_len);
+	argc = 1;
+	if (options) {
+		ZVAL_ARR(&argv[1], Z_ARR_P(options));
+		argc += 1;
+	}
+
+	if (vips_php_call_array(operation_name, IM, 
+		option_string, argc, argv, return_value)) {
+		zval_dtor(&argv[0]);
+		RETURN_LONG(-1);
+	}
+
+	zval_dtor(&argv[0]);
 }
 /* }}} */
 
