@@ -4,7 +4,8 @@ dnl config.m4 for extension vips
 PHP_ARG_WITH(vips, for vips support,
 [  --with-vips             Include vips support])
 
-VIPS_MIN_VERSION=8.3
+# 8.2 added vips_bandjoin_const(), which php-vips needs
+VIPS_MIN_VERSION=8.2
 
 if test x"$PHP_VIPS" != x"no"; then
   if ! pkg-config --atleast-pkgconfig-version 0.2; then

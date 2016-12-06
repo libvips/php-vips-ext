@@ -1,5 +1,9 @@
 vips extension changelog
 
+dev
+---
+	* Lower min vips version to 8.2, see #4
+
 Version 1.0.2 (2016-12-06)
 --------------------------
 	* vips_image_write_to_file() was not setting options, see #3
