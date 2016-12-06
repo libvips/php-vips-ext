@@ -65,6 +65,7 @@ http://pear.php.net/dtd/package-2.0.xsd">
     <file role='test' name='028.phpt'/>
     <file role='test' name='029.phpt'/>
     <file role='test' name='030.phpt'/>
+    <file role='test' name='031.phpt'/>
 
     <dir name="images">
      <file role='test' name='img_0076.jpg'/>
