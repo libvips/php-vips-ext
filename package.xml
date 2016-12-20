@@ -15,9 +15,9 @@ http://pear.php.net/dtd/package-2.0.xsd">
   <email>jcupitt@php.net</email>
   <active>yes</active>
  </lead>
- <date>2016-12-06</date>
+ <date>2016-12-20</date>
  <version>
-  <release>1.0.2</release>
+  <release>1.0.3</release>
   <api>1.0.0</api>
  </version>
  <stability>
@@ -34,7 +34,7 @@ http://pear.php.net/dtd/package-2.0.xsd">
    <file role='doc' name='CREDITS'/>
    <file role='doc' name='LICENSE.txt'/>
    <file role='doc' name='README.md'/>
-   <file role='doc' name='RELEASE-1.0.2'/>
+   <file role='doc' name='RELEASE-1.0.3'/>
    <file role='doc' name='ChangeLog'/>
 
    <file role='src' name='config.m4'/>
@@ -89,7 +89,7 @@ http://pear.php.net/dtd/package-2.0.xsd">
  </extsrcrelease>
  <changelog>
 
-   <release>
+  <release>
    <stability><release>stable</release><api>stable</api></stability>
    <version><release>1.0.2</release><api>1.0.0</api></version>
    <date>2016-12-06</date>

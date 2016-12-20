@@ -3,6 +3,7 @@ vips extension changelog
 dev
 ---
 	* Lower min vips version to 8.2, see #4
+	* Add more logging
 
 Version 1.0.2 (2016-12-06)
 --------------------------

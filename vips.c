@@ -3,8 +3,8 @@
  */
 
 /* Uncomment for some logging.
-#define VIPS_DEBUG
  */
+#define VIPS_DEBUG
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -17,6 +17,10 @@
 
 #include <vips/vips.h>
 #include <vips/debug.h>
+
+#undef VIPS_DEBUG_MSG
+#define VIPS_DEBUG_MSG( ... ) \
+		G_STMT_START { fprintf( stderr, __VA_ARGS__ ); fflush( stdout ); } G_STMT_END
 
 /* If you declare any globals in php_vips.h uncomment this:
 ZEND_DECLARE_MODULE_GLOBALS(vips)
@@ -1621,6 +1625,8 @@ static void php_free_gobject(zend_resource *rsrc)
  */
 PHP_MINIT_FUNCTION(vips)
 {
+	VIPS_DEBUG_MSG("vips: PHP_MINIT_FUNCTION\n");
+
 	/* If you have INI entries, uncomment these lines
 	REGISTER_INI_ENTRIES();
 	*/
@@ -1650,15 +1656,16 @@ PHP_MINIT_FUNCTION(vips)
  */
 PHP_MSHUTDOWN_FUNCTION(vips)
 {
+	VIPS_DEBUG_MSG("vips: PHP_MSHUTDOWN_FUNCTION\n");
+
 	/* uncomment this line if you have INI entries
 	UNREGISTER_INI_ENTRIES();
 	*/
 
-#ifdef VIPS_DEBUG
-	printf( "php-vips-ext shutdown\n" );
-#endif /*VIPS_DEBUG*/
-
+	/*
+	VIPS_DEBUG_MSG("vips: vips_shutdown()\n");
 	vips_shutdown();
+	 */
 
 	return SUCCESS;
 }
@@ -1669,6 +1676,8 @@ PHP_MSHUTDOWN_FUNCTION(vips)
  */
 PHP_RINIT_FUNCTION(vips)
 {
+	VIPS_DEBUG_MSG("vips: PHP_RINIT_FUNCTION\n");
+
 #if defined(COMPILE_DL_VIPS) && defined(ZTS)
 	ZEND_TSRMLS_CACHE_UPDATE();
 #endif
@@ -1681,6 +1690,8 @@ PHP_RINIT_FUNCTION(vips)
  */
 PHP_RSHUTDOWN_FUNCTION(vips)
 {
+	VIPS_DEBUG_MSG("vips: PHP_RSHUTDOWN_FUNCTION\n");
+
 	return SUCCESS;
 }
 /* }}} */
