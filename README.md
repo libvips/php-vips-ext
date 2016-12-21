@@ -152,3 +152,11 @@ https://devzone.zend.com/303/extension-writing-part-i-introduction-to-php-and-ze
 https://devzone.zend.com/317/extension-writing-part-ii-parameters-arrays-and-zvals/
 
 https://devzone.zend.com/446/extension-writing-part-iii-resources/
+
+pear package
+sudo pecl uninstall vips
+sudo pecl install vips-1.0.3.tgz 
+yes
+
+
+

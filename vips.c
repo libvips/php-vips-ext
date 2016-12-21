@@ -20,14 +20,14 @@
 
 #undef VIPS_DEBUG_MSG
 #define VIPS_DEBUG_MSG( ... ) \
-		G_STMT_START { fprintf( stderr, __VA_ARGS__ ); fflush( stdout ); } G_STMT_END
+		G_STMT_START { g_debug( __VA_ARGS__ ); } G_STMT_END
 
 /* If you declare any globals in php_vips.h uncomment this:
 ZEND_DECLARE_MODULE_GLOBALS(vips)
 */
 
 /* True global resources - no need for thread safety here */
-static int le_gobject;
+static int le_gobject = 0;
 
 /* {{{ PHP_INI
  */
@@ -1623,6 +1623,21 @@ static void php_free_gobject(zend_resource *rsrc)
 
 /* {{{ PHP_MINIT_FUNCTION
  */
+
+static void
+our_logger( const gchar *log_domain, GLogLevelFlags log_level,
+	const gchar *message, gpointer user_data)
+{
+	static FILE *fp = NULL;
+
+	if (!fp) {
+		fp = fopen("/tmp/mylog", "a");
+	}
+
+	fprintf(fp, "%s: %s\n", log_domain, message);
+	fflush(fp);
+}
+
 PHP_MINIT_FUNCTION(vips)
 {
 	VIPS_DEBUG_MSG("vips: PHP_MINIT_FUNCTION\n");
@@ -1630,17 +1645,32 @@ PHP_MINIT_FUNCTION(vips)
 	/* If you have INI entries, uncomment these lines
 	REGISTER_INI_ENTRIES();
 	*/
+	
+	g_log_set_default_handler( our_logger, NULL );
 
 	/* We're supposed to use the filename of something we think is in
 	 * $VIPSHOME/bin, but we don't have that. Use a nonsense name and
 	 * vips_init() will fall back to other techniques for finding data
 	 * files.
 	 */
-	if (VIPS_INIT("banana"))
-		return FAILURE;
+	if (!vips_type_find(NULL, "VipsObject")) {
+		VIPS_DEBUG_MSG("vips: not inited before, calling VIPS_INIT\n");
 
-	le_gobject = zend_register_list_destructors_ex(php_free_gobject, 
-		NULL, "GObject", module_number);
+		if (VIPS_INIT("banana"))
+			return FAILURE;
+
+		VIPS_DEBUG_MSG("vips: VIPS_INIT done\n");
+	}
+	else {
+		VIPS_DEBUG_MSG("vips: previously inited, sleeping ...\n");
+		sleep(1);
+	}
+
+	if (!le_gobject) {
+		VIPS_DEBUG_MSG("vips: creating le_gobject\n");
+		le_gobject = zend_register_list_destructors_ex(php_free_gobject, 
+			NULL, "GObject", module_number);
+	}
 
 #ifdef VIPS_DEBUG
 	printf( "php-vips-ext init\n" );
