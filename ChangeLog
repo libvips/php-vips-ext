@@ -1,8 +1,9 @@
 vips extension changelog
 
-dev
----
+Version 1.0.3 (2016-12-27)
+--------------------------
 	* Lower min vips version to 8.2, see #4
+	* Lock libvips to fix graceful, see https://github.com/jcupitt/php-vips/issues/26
 
 Version 1.0.2 (2016-12-06)
 --------------------------

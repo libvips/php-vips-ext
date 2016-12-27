@@ -1621,6 +1621,23 @@ static void php_free_gobject(zend_resource *rsrc)
  */
 PHP_MINIT_FUNCTION(vips)
 {
+	/* "apachectl graceful" can cause us terrible problems. Within the main
+	 * apache process, it will unload this extension, which in turn will unload
+	 * libvips, since we are the only thing that references it, then reload 
+	 * again.
+	 *
+	 * Unfortunately, glib, which libvips uses, will often NOT get unloaded.
+	 * When libvips then tries to init again, it'll find left-over types like
+	 * VipsObject still registered in the system, and chaos will follow.
+	 *
+	 * A simple fix that will always work is just to lock libvips in memory and
+	 * prevent unload. 
+	 */
+	if (!dlopen("libvips.so", RTLD_LAZY | RTLD_NODELETE)) {
+		printf("php-vips-ext: unable to lock libvips -- "
+			"graceful may be unreliable\n");
+	}
+
 	/* If you have INI entries, uncomment these lines
 	REGISTER_INI_ENTRIES();
 	*/
@@ -1658,7 +1675,9 @@ PHP_MSHUTDOWN_FUNCTION(vips)
 	printf( "php-vips-ext shutdown\n" );
 #endif /*VIPS_DEBUG*/
 
-	vips_shutdown();
+	/* We must not call vips_shutdown() since we've locked libvips in memory
+	 * and will need to reuse it if we restart via graceful.
+	 */
 
 	return SUCCESS;
 }
