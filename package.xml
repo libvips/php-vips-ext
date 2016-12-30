@@ -15,9 +15,9 @@ http://pear.php.net/dtd/package-2.0.xsd">
   <email>jcupitt@php.net</email>
   <active>yes</active>
  </lead>
- <date>2016-12-27</date>
+ <date>2016-12-30</date>
  <version>
-  <release>1.0.3</release>
+  <release>1.0.4</release>
   <api>1.0.0</api>
  </version>
  <stability>
@@ -26,7 +26,8 @@ http://pear.php.net/dtd/package-2.0.xsd">
  </stability>
  <license filesource="LICENSE.txt">MIT</license>
  <notes>
-- First stable release.
+* Improve graceful fix from 1.0.3, see https://github.com/jcupitt/php-vips/issues/27
+* Better notes section in package.xml, see https://github.com/jcupitt/php-vips/issues/28
  </notes>
  <contents>
   <dir name="/">
@@ -34,7 +35,7 @@ http://pear.php.net/dtd/package-2.0.xsd">
    <file role='doc' name='CREDITS'/>
    <file role='doc' name='LICENSE.txt'/>
    <file role='doc' name='README.md'/>
-   <file role='doc' name='RELEASE-1.0.3'/>
+   <file role='doc' name='RELEASE-1.0.4'/>
    <file role='doc' name='ChangeLog'/>
 
    <file role='src' name='config.m4'/>
@@ -88,6 +89,16 @@ http://pear.php.net/dtd/package-2.0.xsd">
   <configureoption name="with-vips" default="yes" prompt="enable vips"/>
  </extsrcrelease>
  <changelog>
+
+   <release>
+   <stability><release>stable</release><api>stable</api></stability>
+   <version><release>1.0.4</release><api>1.0.0</api></version>
+   <date>2016-12-30</date>
+   <notes>
+	* Improve graceful fix from 1.0.3, see https://github.com/jcupitt/php-vips/issues/27
+	* Better notes section in package.xml, see https://github.com/jcupitt/php-vips/issues/28
+   </notes>
+  </release>
 
    <release>
    <stability><release>stable</release><api>stable</api></stability>

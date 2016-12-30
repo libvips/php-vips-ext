@@ -13,6 +13,7 @@
 #include "php.h"
 #include "php_ini.h"
 #include "ext/standard/info.h"
+#include "SAPI.h"
 #include "php_vips.h"
 
 #include <vips/vips.h>
@@ -1621,21 +1622,34 @@ static void php_free_gobject(zend_resource *rsrc)
  */
 PHP_MINIT_FUNCTION(vips)
 {
-	/* "apachectl graceful" can cause us terrible problems. Within the main
-	 * apache process, it will unload this extension, which in turn will unload
-	 * libvips, since we are the only thing that references it, then reload 
-	 * again.
-	 *
-	 * Unfortunately, glib, which libvips uses, will often NOT get unloaded.
-	 * When libvips then tries to init again, it'll find left-over types like
-	 * VipsObject still registered in the system, and chaos will follow.
-	 *
-	 * A simple fix that will always work is just to lock libvips in memory and
-	 * prevent unload. 
-	 */
-	if (!dlopen("libvips.so", RTLD_LAZY | RTLD_NODELETE)) {
-		printf("php-vips-ext: unable to lock libvips -- "
-			"graceful may be unreliable\n");
+	if (strcmp(sapi_module.name, "apache2handler") == 0) {
+		/* "apachectl graceful" can cause us terrible problems. What happens:
+		 *
+		 * - the main apache process unloads this extension, vips.so
+		 * - in turn, the C runtime will unload libvips.so, the vips library,
+		 *   since vips.so is the only thing that references it
+		 * - libvips.so in turn uses glib.so, but this is often not unloaded,
+		 *   since other parts of apache can be using it (glib could also
+		 *   possibly be preventing unload itself, I'm not sure)
+		 * - the main apache process then reloads vips.so, which in turn will
+		 *   reload libvips.so as it starts up
+		 * - vips.so tries to init libvips.so
+		 * - libvips.so tries to register its types (such as VipsImage) with
+		 *   glib.so, but finds the types from the previous init still there
+		 * - everything breaks
+		 *
+		 * A simple fix that will always work is just to lock libvips in 
+		 * memory and prevent unload. We intentionally leak refs to the shared
+		 * library. 
+		 *
+		 * We include the binary API version number that this extension needs. 
+		 * We can't just load .so, that's only installed with libvips-dev, 
+		 * which may not be present at runtime.
+		 */
+		if (!dlopen("libvips.so.42", RTLD_LAZY | RTLD_NODELETE)) {
+			sapi_module.sapi_error(E_WARNING, "php-vips-ext: unable to lock "
+				"libvips -- graceful may be unreliable");
+		}
 	}
 
 	/* If you have INI entries, uncomment these lines
