@@ -1646,7 +1646,12 @@ PHP_MINIT_FUNCTION(vips)
 		 * We can't just load .so, that's only installed with libvips-dev, 
 		 * which may not be present at runtime.
 		 */
-		if (!dlopen("libvips.so.42", RTLD_LAZY | RTLD_NODELETE)) {
+#ifdef VIPS_SONAME
+		if (!dlopen(VIPS_SONAME, RTLD_LAZY | RTLD_NODELETE)) 
+#else /*!VIPS_SONAME*/
+		if (!dlopen("libvips.so.42", RTLD_LAZY | RTLD_NODELETE)) 
+#endif /*VIPS_SONAME*/
+		{
 			sapi_module.sapi_error(E_WARNING, "php-vips-ext: unable to lock "
 				"libvips -- graceful may be unreliable");
 		}

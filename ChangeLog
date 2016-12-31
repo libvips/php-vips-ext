@@ -1,6 +1,11 @@
 vips extension changelog
 
+dev
+---
+	* Use VIPS_SONAME, if we can
+
 Version 1.0.4 (2016-12-30)
+--------------------------
 	* Improve graceful fix from 1.0.3, see https://github.com/jcupitt/php-vips/issues/27
 	* Better notes section in package.xml, see https://github.com/jcupitt/php-vips/issues/28
 
