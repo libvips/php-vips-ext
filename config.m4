@@ -16,7 +16,7 @@ fi
 
 if test x"$PHP_VIPS" != x"no"; then
   if ! pkg-config vips --atleast-version $VIPS_MIN_VERSION; then
-    AC_MSG_ERROR([you need at least vips $VIPS_MIN_VERSION for this module])
+    AC_MSG_ERROR([you need at least libvips $VIPS_MIN_VERSION for this module])
     PHP_VIPS=no
   fi
 fi
