@@ -18,6 +18,7 @@
 
 #include <vips/vips.h>
 #include <vips/debug.h>
+#include <vips/vector.h>
 
 /* If you declare any globals in php_vips.h uncomment this:
 ZEND_DECLARE_MODULE_GLOBALS(vips)
@@ -1727,8 +1728,53 @@ PHP_RSHUTDOWN_FUNCTION(vips)
  */
 PHP_MINFO_FUNCTION(vips)
 {
+	char digits[256];
+
 	php_info_print_table_start();
 	php_info_print_table_header(2, "vips support", "enabled");
+
+	vips_snprintf(digits, 256, "%d", vips_version(0));
+	php_info_print_table_row(2, "Major version", digits); 
+	vips_snprintf(digits, 256, "%d", vips_version(1));
+	php_info_print_table_row(2, "Minor version", digits); 
+	vips_snprintf(digits, 256, "%d", vips_version(2));
+	php_info_print_table_row(2, "Micro version", digits); 
+
+	php_info_print_table_row(2, "SIMD support with liborc", 
+		vips_vector_isenabled() ? "yes" : "no" ); 
+
+	php_info_print_table_row(2, "JPEG support", 
+		vips_type_find("VipsOperation", "jpegload") ? "yes" : "no" ); 
+	php_info_print_table_row(2, "PNG support", 
+		vips_type_find("VipsOperation", "pngload") ? "yes" : "no" ); 
+	php_info_print_table_row(2, "TIFF support", 
+		vips_type_find("VipsOperation", "tiffload") ? "yes" : "no" ); 
+	php_info_print_table_row(2, "GIF support", 
+		vips_type_find("VipsOperation", "gifload") ? "yes" : "no" ); 
+	php_info_print_table_row(2, "OpenEXR support", 
+		vips_type_find("VipsOperation", "openexrload") ? "yes" : "no" ); 
+	php_info_print_table_row(2, "load OpenSlide", 
+		vips_type_find("VipsOperation", "openslideload") ? "yes" : "no" ); 
+	php_info_print_table_row(2, "load Matlab", 
+		vips_type_find("VipsOperation", "matload") ? "yes" : "no" ); 
+	php_info_print_table_row(2, "load PDF", 
+		vips_type_find("VipsOperation", "pdfload") ? "yes" : "no" ); 
+	php_info_print_table_row(2, "load SVG", 
+		vips_type_find("VipsOperation", "svgload") ? "yes" : "no" ); 
+	php_info_print_table_row(2, "FITS support", 
+		vips_type_find("VipsOperation", "fitsload") ? "yes" : "no" ); 
+	php_info_print_table_row(2, "WebP support", 
+		vips_type_find("VipsOperation", "webpload") ? "yes" : "no" ); 
+
+	php_info_print_table_row(2, "load with libMagick", 
+		vips_type_find("VipsOperation", "magickload") ? "yes" : "no" ); 
+
+	php_info_print_table_row(2, "Text rendering support", 
+		vips_type_find("VipsOperation", "text") ? "yes" : "no" ); 
+
+	php_info_print_table_row(2, "ICC profile support with lcms", 
+		vips_icc_present() ? "yes" : "no" ); 
+
 	php_info_print_table_end();
 
 	/* Remove comments if you have entries in php.ini
