@@ -1731,7 +1731,7 @@ PHP_MINFO_FUNCTION(vips)
 	char digits[256];
 
 	php_info_print_table_start();
-	php_info_print_table_header(2, "vips support", "enabled");
+	php_info_print_table_header(2, "vips property", "value");
 
 	vips_snprintf(digits, 256, "%d", vips_version(0));
 	php_info_print_table_row(2, "Major version", digits); 
