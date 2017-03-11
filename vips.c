@@ -1331,6 +1331,48 @@ PHP_FUNCTION(vips_image_write_to_buffer)
 }
 /* }}} */
 
+/* {{{ proto string|long vips_foreign_find_load(string filename)
+   Find a loader for a file */
+PHP_FUNCTION(vips_foreign_find_load)
+{
+	char *filename;
+	size_t filename_len;
+	const char *operation_name;
+
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "s", 
+		&filename, &filename_len) == FAILURE) {
+		RETURN_LONG(-1);
+	}
+
+	if (!(operation_name = vips_foreign_find_load(filename))) {
+		RETURN_LONG(-1);
+	}
+
+	RETVAL_STRING(strdup(operation_name));
+}
+/* }}} */
+
+/* {{{ proto string|long vips_foreign_find_load_buffer(string buffer)
+   Find a loader for a buffer */
+PHP_FUNCTION(vips_foreign_find_load_buffer)
+{
+	char *buffer;
+	size_t buffer_len;
+	const char *operation_name;
+
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "s", 
+		&buffer, &buffer_len) == FAILURE) {
+		RETURN_LONG(-1);
+	}
+
+	if (!(operation_name = vips_foreign_find_load_buffer(buffer, buffer_len))) {
+		RETURN_LONG(-1);
+	}
+
+	RETVAL_STRING(strdup(operation_name));
+}
+/* }}} */
+
 /* {{{ proto array vips_image_get(resource image, string field)
    Fetch field from image */
 PHP_FUNCTION(vips_image_get)
@@ -1811,6 +1853,14 @@ ZEND_BEGIN_ARG_INFO(arginfo_vips_image_write_to_buffer, 0)
 	ZEND_ARG_INFO(0, options)
 ZEND_END_ARG_INFO()
 
+ZEND_BEGIN_ARG_INFO(arginfo_vips_foreign_find_load, 0)
+	ZEND_ARG_INFO(0, filename)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO(arginfo_vips_foreign_find_load_buffer, 0)
+	ZEND_ARG_INFO(0, buffer)
+ZEND_END_ARG_INFO()
+
 ZEND_BEGIN_ARG_INFO(arginfo_vips_call, 0)
 	ZEND_ARG_INFO(0, operation_name)
 	ZEND_ARG_INFO(0, instance)
@@ -1866,6 +1916,9 @@ const zend_function_entry vips_functions[] = {
 	PHP_FE(vips_image_new_from_array, arginfo_vips_image_new_from_array)
 	PHP_FE(vips_image_write_to_file, arginfo_vips_image_write_to_file)
 	PHP_FE(vips_image_write_to_buffer, arginfo_vips_image_write_to_buffer)
+	PHP_FE(vips_foreign_find_load, arginfo_vips_foreign_find_load)
+	PHP_FE(vips_foreign_find_load_buffer, arginfo_vips_foreign_find_load_buffer)
+
 	PHP_FE(vips_call, arginfo_vips_call)
 	PHP_FE(vips_image_get, arginfo_vips_image_get)
 	PHP_FE(vips_image_get_typeof, arginfo_vips_image_get_typeof)

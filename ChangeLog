@@ -1,9 +1,10 @@
 vips extension changelog
 
-dev
----
+Version 1.0.5 (2017-3-11)
+--------------------------
 	* Use VIPS_SONAME, if we can
 	* More stuff in php_info(), see https://github.com/jcupitt/php-vips/issues/32
+	* Add vips_foreign_find_load() and vips_foreign_find_load_buffer(), see https://github.com/jcupitt/php-vips/issues/37
 
 Version 1.0.4 (2016-12-30)
 --------------------------
