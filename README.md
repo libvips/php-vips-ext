@@ -77,7 +77,7 @@ I used 7.0.11 and configured with:
 ```
 $ ./configure --prefix=/home/john/vips --enable-debug --enable-maintainer-zts \
     --enable-cgi --enable-cli --with-readline --with-openssl --with-zlib \
-    --with-gd --with-jpeg-dir=/usr --with-libxml-dir=/usr
+    --with-gd --with-jpeg-dir=/usr --with-libxml-dir=/usr --enable-mbstring 
 ```
 
 You'll need libvips 8.0 or later, including all the headers for
@@ -91,7 +91,7 @@ libvips website, or build your own.
 $ pear package
 ```
 
-to make `vips-1.0.4.tgz`.
+to make `vips-1.0.5.tgz`.
 
 To install by hand:
 
