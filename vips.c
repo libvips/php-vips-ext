@@ -1338,15 +1338,8 @@ PHP_FUNCTION(vips_image_copy_memory)
 	zval *IM;
 	VipsImage *image;
 	VipsImage *new_image;
-
-	char *name;
-	size_t name_len;
-	zval *options;
-	char filename[VIPS_PATH_MAX];
-	char option_string[VIPS_PATH_MAX];
-	const char *operation_name;
-	zval argv[2];
-	int argc;
+	zend_resource *resource;
+	zval zvalue;
 
 	VIPS_DEBUG_MSG("vips_image_copy_memory:\n");
 
@@ -1364,7 +1357,12 @@ PHP_FUNCTION(vips_image_copy_memory)
 		RETURN_LONG(-1);
 	}
 
-	RETURN_RES(zend_register_resource(new_image, le_gobject));
+	/* Return as an array for all OK, -1 for error.
+	 */
+	array_init(return_value);
+	resource = zend_register_resource(new_image, le_gobject);
+	ZVAL_RES(&zvalue, resource);
+	add_assoc_zval(return_value, "out", &zvalue);
 }
 /* }}} */
 
