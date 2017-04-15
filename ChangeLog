@@ -1,5 +1,9 @@
 vips extension changelog
 
+Version 1.0.6 (2017-4-15)
+--------------------------
+	* Add vips_image_copy_memory()
+
 Version 1.0.5 (2017-3-11)
 --------------------------
 	* Use VIPS_SONAME, if we can

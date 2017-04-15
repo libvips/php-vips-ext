@@ -1331,6 +1331,43 @@ PHP_FUNCTION(vips_image_write_to_buffer)
 }
 /* }}} */
 
+/* {{{ proto resource vips_image_copy_memory(resource image)
+   Copy an image to a memory image */
+PHP_FUNCTION(vips_image_copy_memory)
+{
+	zval *IM;
+	VipsImage *image;
+	VipsImage *new_image;
+
+	char *name;
+	size_t name_len;
+	zval *options;
+	char filename[VIPS_PATH_MAX];
+	char option_string[VIPS_PATH_MAX];
+	const char *operation_name;
+	zval argv[2];
+	int argc;
+
+	VIPS_DEBUG_MSG("vips_image_copy_memory:\n");
+
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "r", &IM) == FAILURE) {
+		RETURN_LONG(-1);
+	}
+
+	if ((image = (VipsImage *)zend_fetch_resource(Z_RES_P(IM), 
+		"GObject", le_gobject)) == NULL) {
+		RETURN_LONG(-1);
+	}
+
+	new_image = vips_image_copy_memory(image);
+	if (!new_image) {
+		RETURN_LONG(-1);
+	}
+
+	RETURN_RES(zend_register_resource(new_image, le_gobject));
+}
+/* }}} */
+
 /* {{{ proto string|long vips_foreign_find_load(string filename)
    Find a loader for a file */
 PHP_FUNCTION(vips_foreign_find_load)
@@ -1853,6 +1890,10 @@ ZEND_BEGIN_ARG_INFO(arginfo_vips_image_write_to_buffer, 0)
 	ZEND_ARG_INFO(0, options)
 ZEND_END_ARG_INFO()
 
+ZEND_BEGIN_ARG_INFO(arginfo_vips_image_copy_memory, 0)
+	ZEND_ARG_INFO(0, image)
+ZEND_END_ARG_INFO()
+
 ZEND_BEGIN_ARG_INFO(arginfo_vips_foreign_find_load, 0)
 	ZEND_ARG_INFO(0, filename)
 ZEND_END_ARG_INFO()
@@ -1916,6 +1957,7 @@ const zend_function_entry vips_functions[] = {
 	PHP_FE(vips_image_new_from_array, arginfo_vips_image_new_from_array)
 	PHP_FE(vips_image_write_to_file, arginfo_vips_image_write_to_file)
 	PHP_FE(vips_image_write_to_buffer, arginfo_vips_image_write_to_buffer)
+	PHP_FE(vips_image_copy_memory, arginfo_vips_image_copy_memory)
 	PHP_FE(vips_foreign_find_load, arginfo_vips_foreign_find_load)
 	PHP_FE(vips_foreign_find_load_buffer, arginfo_vips_foreign_find_load_buffer)
 

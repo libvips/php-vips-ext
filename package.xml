@@ -15,9 +15,9 @@ http://pear.php.net/dtd/package-2.0.xsd">
   <email>jcupitt@php.net</email>
   <active>yes</active>
  </lead>
- <date>2017-04-08</date>
+ <date>2017-04-15</date>
  <version>
-  <release>1.0.5</release>
+  <release>1.0.6</release>
   <api>1.0.0</api>
  </version>
  <stability>
@@ -26,9 +26,7 @@ http://pear.php.net/dtd/package-2.0.xsd">
  </stability>
  <license filesource="LICENSE.txt">MIT</license>
  <notes>
-* Use VIPS_SONAME, if we can
-* More stuff in php_info(), see https://github.com/jcupitt/php-vips/issues/32
-* Add vips_foreign_find_load() and vips_foreign_find_load_buffer(), see https://github.com/jcupitt/php-vips/issues/37
+	* Add vips_image_copy_memory()
  </notes>
  <contents>
   <dir name="/">
@@ -36,7 +34,7 @@ http://pear.php.net/dtd/package-2.0.xsd">
    <file role='doc' name='CREDITS'/>
    <file role='doc' name='LICENSE.txt'/>
    <file role='doc' name='README.md'/>
-   <file role='doc' name='RELEASE-1.0.5'/>
+   <file role='doc' name='RELEASE-1.0.6'/>
    <file role='doc' name='ChangeLog'/>
 
    <file role='src' name='config.m4'/>
@@ -68,6 +66,9 @@ http://pear.php.net/dtd/package-2.0.xsd">
     <file role='test' name='029.phpt'/>
     <file role='test' name='030.phpt'/>
     <file role='test' name='031.phpt'/>
+    <file role='test' name='032.phpt'/>
+    <file role='test' name='033.phpt'/>
+    <file role='test' name='034.phpt'/>
 
     <dir name="images">
      <file role='test' name='img_0076.jpg'/>
@@ -90,6 +91,15 @@ http://pear.php.net/dtd/package-2.0.xsd">
   <configureoption name="with-vips" default="yes" prompt="enable vips"/>
  </extsrcrelease>
  <changelog>
+
+   <release>
+   <stability><release>stable</release><api>stable</api></stability>
+   <version><release>1.0.6</release><api>1.0.0</api></version>
+   <date>2017-04-15</date>
+   <notes>
+	* Add vips_image_copy_memory()
+   </notes>
+  </release>
 
    <release>
    <stability><release>stable</release><api>stable</api></stability>
