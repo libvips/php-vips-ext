@@ -15,7 +15,7 @@ http://pear.php.net/dtd/package-2.0.xsd">
   <email>jcupitt@php.net</email>
   <active>yes</active>
  </lead>
- <date>2017-04-15</date>
+ <date>2017-04-17</date>
  <version>
   <release>1.0.6</release>
   <api>1.0.0</api>
@@ -95,7 +95,7 @@ http://pear.php.net/dtd/package-2.0.xsd">
    <release>
    <stability><release>stable</release><api>stable</api></stability>
    <version><release>1.0.6</release><api>1.0.0</api></version>
-   <date>2017-04-15</date>
+   <date>2017-04-17</date>
    <notes>
 	* Add vips_image_copy_memory()
    </notes>
