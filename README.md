@@ -27,7 +27,7 @@ single result called `"out"`.
 Use `vips_call()` to call any operation in the vips library. There are around 
 around 300 operations available, see the vips docs for an introduction:
 
-http://www.vips.ecs.soton.ac.uk/supported/current/doc/html/libvips/
+http://jcupitt.github.io/libvips/API/current/
 
 Arguments can be long, double, image, array of long, array of double or array
 of image. The final argument to `vips_call()` is an array of operation options. 
@@ -80,7 +80,7 @@ $ ./configure --prefix=/home/john/vips --enable-debug --enable-maintainer-zts \
     --with-gd --with-jpeg-dir=/usr --with-libxml-dir=/usr --enable-mbstring 
 ```
 
-You'll need libvips 8.0 or later, including all the headers for
+You'll need libvips 8.2 or later, including all the headers for
 development.  On linux, install with your package manager.  On macOS,
 install with `brew` or MacPorts. For Windows, download a zip from the
 libvips website, or build your own.
