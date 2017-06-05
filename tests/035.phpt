@@ -6,7 +6,7 @@ can make an interpolator
 <?php 
   $interp = vips_interpolate_new("bicubic");
 
-  if ($interp != -1) {
+  if ($interp != null) {
     echo "pass";
   }
 ?>
