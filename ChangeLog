@@ -1,5 +1,9 @@
 vips extension changelog
 
+Version 1.0.7 (2017-6-5)
+--------------------------
+	* Add vips_interpolate_new()
+
 Version 1.0.6 (2017-4-15)
 --------------------------
 	* Add vips_image_copy_memory()

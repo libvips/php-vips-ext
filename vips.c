@@ -1237,6 +1237,29 @@ PHP_FUNCTION(vips_image_new_from_array)
 }
 /* }}} */
 
+/* {{{ proto resource vips_interpolate_new(string name])
+   make a new interpolator */
+PHP_FUNCTION(vips_interpolate_new)
+{
+	char *name;
+	size_t name_len;
+	VipsInterpolate *interp;
+
+	VIPS_DEBUG_MSG("vips_interpolate_new:\n");
+
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "p", 
+		&name, &name_len) == FAILURE) {
+		return;
+	}
+	VIPS_DEBUG_MSG("vips_interpolate_new: name = %s\n", name);
+
+	if (!(interp = vips_interpolate_new(name)))
+		return;
+
+	RETURN_RES(zend_register_resource(interp, le_gobject));
+}
+/* }}} */
+
 /* {{{ proto long vips_image_write_to_file(resource image, string filename [, array options])
    Write an image to a filename */
 PHP_FUNCTION(vips_image_write_to_file)
@@ -1896,6 +1919,10 @@ ZEND_BEGIN_ARG_INFO(arginfo_vips_foreign_find_load, 0)
 	ZEND_ARG_INFO(0, filename)
 ZEND_END_ARG_INFO()
 
+ZEND_BEGIN_ARG_INFO(arginfo_vips_interpolate_new, 0)
+	ZEND_ARG_INFO(0, name)
+ZEND_END_ARG_INFO()
+
 ZEND_BEGIN_ARG_INFO(arginfo_vips_foreign_find_load_buffer, 0)
 	ZEND_ARG_INFO(0, buffer)
 ZEND_END_ARG_INFO()
@@ -1958,6 +1985,7 @@ const zend_function_entry vips_functions[] = {
 	PHP_FE(vips_image_copy_memory, arginfo_vips_image_copy_memory)
 	PHP_FE(vips_foreign_find_load, arginfo_vips_foreign_find_load)
 	PHP_FE(vips_foreign_find_load_buffer, arginfo_vips_foreign_find_load_buffer)
+	PHP_FE(vips_interpolate_new, arginfo_vips_interpolate_new)
 
 	PHP_FE(vips_call, arginfo_vips_call)
 	PHP_FE(vips_image_get, arginfo_vips_image_get)
