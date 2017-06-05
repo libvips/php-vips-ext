@@ -15,7 +15,7 @@ http://pear.php.net/dtd/package-2.0.xsd">
   <email>jcupitt@php.net</email>
   <active>yes</active>
  </lead>
- <date>2017-04-17</date>
+ <date>2017-06-05</date>
  <version>
   <release>1.0.7</release>
   <api>1.0.0</api>
@@ -34,7 +34,7 @@ http://pear.php.net/dtd/package-2.0.xsd">
    <file role='doc' name='CREDITS'/>
    <file role='doc' name='LICENSE.txt'/>
    <file role='doc' name='README.md'/>
-   <file role='doc' name='RELEASE-1.0.6'/>
+   <file role='doc' name='RELEASE-1.0.7'/>
    <file role='doc' name='ChangeLog'/>
 
    <file role='src' name='config.m4'/>
