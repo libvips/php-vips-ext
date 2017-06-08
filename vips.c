@@ -1833,6 +1833,13 @@ PHP_MINFO_FUNCTION(vips)
 	php_info_print_table_start();
 	php_info_print_table_header(2, "vips property", "value");
 
+	vips_snprintf(digits, 256, "%d.%d.%d", VIPS_MAJOR_VERSION, VIPS_MINOR_VERSION, VIPS_MICRO_VERSION);
+	php_info_print_table_row(2, "Vips headers version", digits);
+	vips_snprintf(digits, 256, "%d.%d.%d", vips_version(0), vips_version(1), vips_version(2));
+	php_info_print_table_row(2, "Vips library version", digits);
+	vips_snprintf(digits, 256, "%d.%d.%d", vips_version(3), vips_version(4), vips_version(5));
+	php_info_print_table_row(2, "Vips ABI version", digits);
+
 	vips_snprintf(digits, 256, "%d", vips_version(0));
 	php_info_print_table_row(2, "Major version", digits); 
 	vips_snprintf(digits, 256, "%d", vips_version(1));
