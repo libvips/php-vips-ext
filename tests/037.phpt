@@ -15,8 +15,8 @@ can make an image from memory
   if ($width == 20 &&
 	$height == 10 &&
 	$format == 'uchar' &&
-    $bands == 1 &&
-    $avg == 0) {
+	$bands == 1 &&
+	$avg == 0) {
 	echo "pass";
   }
 ?>
