@@ -10,14 +10,13 @@ can make an image from memory
   $height = vips_image_get($image, "height")["out"];
   $format = vips_image_get($image, "format")["out"];
   $bands = vips_image_get($image, "bands")["out"];
-  // FIXME: $avg doesn't output zero.
   $avg = vips_call("avg", $image)["out"];
-  // echo $avg;
 
   if ($width == 20 &&
 	$height == 10 &&
 	$format == 'uchar' &&
-    $bands == 1) {
+    $bands == 1 &&
+    $avg == 0) {
 	echo "pass";
   }
 ?>

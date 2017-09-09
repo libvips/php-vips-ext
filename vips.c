@@ -1392,7 +1392,7 @@ PHP_FUNCTION(vips_image_copy_memory)
    Wrap an image around a memory array. */
 PHP_FUNCTION(vips_image_new_from_memory)
 {
-	zval *array;
+	HashTable *ht;
 	long width;
 	long height;
 	long bands;
@@ -1400,13 +1400,12 @@ PHP_FUNCTION(vips_image_new_from_memory)
 	size_t format_len;
 	int format_value;
 	VipsBandFormat band_format;
-	int array_count;
 	VipsImage *image;
 
 	VIPS_DEBUG_MSG("vips_image_new_from_memory:\n");
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS(), "alllp",
- 		&array, &width, &height, &bands, &format, &format_len) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "hlllp",
+		&ht, &width, &height, &bands, &format, &format_len) == FAILURE) {
 		RETURN_LONG(-1);
 	}
 
@@ -1415,11 +1414,20 @@ PHP_FUNCTION(vips_image_new_from_memory)
 	}
 	band_format = format_value;
 
-	array_count = zend_hash_num_elements(Z_ARRVAL_P(array));
-	// FIXME: Can we pass the zval array like this?
-	// Or should we loop first?
-	if (!(image = vips_image_new_from_memory((void *) array, array_count, width, height,
-		bands, band_format))) {
+	const int size = zend_hash_num_elements(ht);
+	int arr[size];
+	int i;
+
+	for (i = 0; i < size; i++) {
+		zval *ele;
+
+		if ((ele = zend_hash_index_find(ht, i)) != NULL) {
+			arr[i] = zval_get_long(ele);
+		}
+	}
+
+	if (!(image = vips_image_new_from_memory_copy(arr, size, width, height, bands,
+		band_format))) {
 		RETURN_LONG(-1);
 	}
 
