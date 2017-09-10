@@ -5,7 +5,7 @@ can write to memory
 --FILE--
 <?php
   $byte_array = array_fill(0, 200, 0);
-  $image = vips_image_new_from_memory($byte_array, 20, 10, 1, 'uchar');
+  $image = vips_image_new_from_memory($byte_array, 20, 10, 1, 'uchar')["out"];
   $mem_arr = vips_image_write_to_memory($image);
 
   if ($byte_array === $mem_arr) {

@@ -1401,6 +1401,8 @@ PHP_FUNCTION(vips_image_new_from_memory)
 	int format_value;
 	VipsBandFormat band_format;
 	VipsImage *image;
+	zend_resource *resource;
+	zval zvalue;
 
 	VIPS_DEBUG_MSG("vips_image_new_from_memory:\n");
 
@@ -1431,7 +1433,12 @@ PHP_FUNCTION(vips_image_new_from_memory)
 		RETURN_LONG(-1);
 	}
 
-	RETURN_RES(zend_register_resource(image, le_gobject));
+	/* Return as an array for all OK, -1 for error.
+	 */
+	array_init(return_value);
+	resource = zend_register_resource(image, le_gobject);
+	ZVAL_RES(&zvalue, resource);
+	add_assoc_zval(return_value, "out", &zvalue);
 }
 /* }}} */
 
