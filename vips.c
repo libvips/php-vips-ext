@@ -1701,11 +1701,11 @@ PHP_FUNCTION(vips_concurrency_set)
    Returns the version number of the vips library */
 PHP_FUNCTION(vips_version)
 {
-    char digits[256];
+	char digits[256];
 
-    vips_snprintf(digits, 256, "%d.%d.%d", vips_version(0), vips_version(1), vips_version(2));
+	vips_snprintf(digits, 256, "%d.%d.%d", vips_version(0), vips_version(1), vips_version(2));
 
-    RETVAL_STRING(digits);
+	RETVAL_STRING(digits);
 }
 /* }}} */
 
