@@ -1388,11 +1388,12 @@ PHP_FUNCTION(vips_image_copy_memory)
 }
 /* }}} */
 
-/* {{{ proto resource vips_image_new_from_memory(array data, integer width, integer height, integer bands, string format)
+/* {{{ proto resource vips_image_new_from_memory(string data, integer width, integer height, integer bands, string format)
    Wrap an image around a memory array. */
 PHP_FUNCTION(vips_image_new_from_memory)
 {
-	HashTable *ht;
+	char *bstr;
+	size_t bstr_len;
 	long width;
 	long height;
 	long bands;
@@ -1406,29 +1407,17 @@ PHP_FUNCTION(vips_image_new_from_memory)
 
 	VIPS_DEBUG_MSG("vips_image_new_from_memory:\n");
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS(), "hlllp",
-		&ht, &width, &height, &bands, &format, &format_len) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "slllp",
+		&bstr, &bstr_len, &width, &height, &bands, &format, &format_len) == FAILURE) {
 		RETURN_LONG(-1);
 	}
 
-	if ((format_value = vips_enum_from_nick("enum", VIPS_TYPE_BAND_FORMAT, format)) < 0) {
+	if ((format_value = vips_enum_from_nick("php-vips", VIPS_TYPE_BAND_FORMAT, format)) < 0) {
 		RETURN_LONG(-1);
 	}
 	band_format = format_value;
 
-	const int size = zend_hash_num_elements(ht);
-	int arr[size];
-	int i;
-
-	for (i = 0; i < size; i++) {
-		zval *ele;
-
-		if ((ele = zend_hash_index_find(ht, i)) != NULL) {
-			arr[i] = zval_get_long(ele);
-		}
-	}
-
-	if (!(image = vips_image_new_from_memory_copy(arr, size, width, height, bands,
+	if (!(image = vips_image_new_from_memory_copy(bstr, bstr_len, width, height, bands,
 		band_format))) {
 		RETURN_LONG(-1);
 	}
@@ -1442,7 +1431,7 @@ PHP_FUNCTION(vips_image_new_from_memory)
 }
 /* }}} */
 
-/* {{{ proto array vips_image_write_to_memory(resource image)
+/* {{{ proto string vips_image_write_to_memory(resource image)
    Write an image to a memory array. */
 PHP_FUNCTION(vips_image_write_to_memory)
 {
@@ -1466,12 +1455,9 @@ PHP_FUNCTION(vips_image_write_to_memory)
 		RETURN_LONG(-1);
 	}
 
-	array_init(return_value);
+	RETVAL_STRINGL((char *)arr, arr_len);
 
-	int i;
-	for (i = 0; i < arr_len; i++) {
-		add_next_index_long(return_value, arr[i]);
-	}
+    g_free(arr);
 }
 /* }}} */
 
