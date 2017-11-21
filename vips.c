@@ -1696,6 +1696,15 @@ PHP_FUNCTION(vips_concurrency_set)
 
 	vips_concurrency_set(value); 
 }
+
+/* {{{ proto string vips_version()
+   Returns the version number of the vips library */
+PHP_FUNCTION(vips_version)
+{
+  char digits[256];
+  vips_snprintf(digits, 256, "%d.%d.%d", vips_version(0), vips_version(1), vips_version(2));
+  RETVAL_STRING(strdup(digits));
+}
 /* }}} */
 
 /* {{{ php_vips_init_globals
@@ -1979,6 +1988,8 @@ ZEND_BEGIN_ARG_INFO(arginfo_vips_concurrency_set, 0)
 	ZEND_ARG_INFO(0, value)
 ZEND_END_ARG_INFO()
 
+ZEND_BEGIN_ARG_INFO(arginfo_vips_version, 0)
+ZEND_END_ARG_INFO()
 /* {{{ vips_functions[]
  *
  * Every user visible function must have an entry in vips_functions[].
@@ -2004,6 +2015,7 @@ const zend_function_entry vips_functions[] = {
 	PHP_FE(vips_cache_set_max_mem, arginfo_vips_cache_set_max_mem)
 	PHP_FE(vips_cache_set_max_files, arginfo_vips_cache_set_max_files)
 	PHP_FE(vips_concurrency_set, arginfo_vips_concurrency_set)
+	PHP_FE(vips_version, arginfo_vips_version)
 
 	PHP_FE_END	/* Must be the last line in vips_functions[] */
 };
