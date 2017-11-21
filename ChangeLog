@@ -2,7 +2,10 @@ vips extension changelog
 
 Version 1.0.8 (2017-11-21)
 --------------------------
-	* Add vips_version(), see https://github.com/jcupitt/php-vips-ext/pull/15
+	* Add vips_version() [chregu]
+	  https://github.com/jcupitt/php-vips-ext/pull/15
+	* Add vips_new_from_memory() / vips_write_to_memory() [kleisauke]
+	  https://github.com/jcupitt/php-vips-ext/pull/13
 
 Version 1.0.7 (2017-6-5)
 --------------------------

@@ -1388,7 +1388,7 @@ PHP_FUNCTION(vips_image_copy_memory)
 }
 /* }}} */
 
-/* {{{ proto resource vips_image_write_to_memory(array data, integer width, integer height, integer bands, string format)
+/* {{{ proto resource vips_image_new_from_memory(array data, integer width, integer height, integer bands, string format)
    Wrap an image around a memory array. */
 PHP_FUNCTION(vips_image_new_from_memory)
 {
