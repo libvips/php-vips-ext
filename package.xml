@@ -15,7 +15,7 @@ http://pear.php.net/dtd/package-2.0.xsd">
   <email>jcupitt@php.net</email>
   <active>yes</active>
  </lead>
- <date>2017-11-21</date>
+ <date>2017-11-22</date>
  <version>
   <release>1.0.8</release>
   <api>1.0.0</api>
@@ -26,7 +26,8 @@ http://pear.php.net/dtd/package-2.0.xsd">
  </stability>
  <license filesource="LICENSE.txt">MIT</license>
  <notes>
-	* Add vips_interpolate_new()
+	* Add vips_version() [chregu]
+	* Add vips_new_from_memory() / vips_write_to_memory() [kleisauke]
  </notes>
  <contents>
   <dir name="/">
@@ -97,9 +98,10 @@ http://pear.php.net/dtd/package-2.0.xsd">
   <release>
    <stability><release>stable</release><api>stable</api></stability>
    <version><release>1.0.8</release><api>1.0.0</api></version>
-   <date>2017-11-21</date>
+   <date>2017-11-22</date>
    <notes>
-	* Add vips_version()
+	* Add vips_version() [chregu]
+	* Add vips_new_from_memory() / vips_write_to_memory() [kleisauke]
    </notes>
   </release>
 
