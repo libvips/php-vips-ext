@@ -1375,8 +1375,7 @@ PHP_FUNCTION(vips_image_copy_memory)
 		RETURN_LONG(-1);
 	}
 
-	new_image = vips_image_copy_memory(image);
-	if (!new_image) {
+	if (!(new_image = vips_image_copy_memory(image))) {
 		RETURN_LONG(-1);
 	}
 
@@ -1386,6 +1385,78 @@ PHP_FUNCTION(vips_image_copy_memory)
 	resource = zend_register_resource(new_image, le_gobject);
 	ZVAL_RES(&zvalue, resource);
 	add_assoc_zval(return_value, "out", &zvalue);
+}
+/* }}} */
+
+/* {{{ proto resource vips_image_new_from_memory(string data, integer width, integer height, integer bands, string format)
+   Wrap an image around a memory array. */
+PHP_FUNCTION(vips_image_new_from_memory)
+{
+	char *bstr;
+	size_t bstr_len;
+	long width;
+	long height;
+	long bands;
+	char *format;
+	size_t format_len;
+	int format_value;
+	VipsBandFormat band_format;
+	VipsImage *image;
+	zend_resource *resource;
+	zval zvalue;
+
+	VIPS_DEBUG_MSG("vips_image_new_from_memory:\n");
+
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "slllp",
+		&bstr, &bstr_len, &width, &height, &bands, &format, &format_len) == FAILURE) {
+		RETURN_LONG(-1);
+	}
+
+	if ((format_value = vips_enum_from_nick("php-vips", VIPS_TYPE_BAND_FORMAT, format)) < 0) {
+		RETURN_LONG(-1);
+	}
+	band_format = format_value;
+
+	if (!(image = vips_image_new_from_memory_copy(bstr, bstr_len, width, height, bands,
+		band_format))) {
+		RETURN_LONG(-1);
+	}
+
+	/* Return as an array for all OK, -1 for error.
+	 */
+	array_init(return_value);
+	resource = zend_register_resource(image, le_gobject);
+	ZVAL_RES(&zvalue, resource);
+	add_assoc_zval(return_value, "out", &zvalue);
+}
+/* }}} */
+
+/* {{{ proto string vips_image_write_to_memory(resource image)
+   Write an image to a memory array. */
+PHP_FUNCTION(vips_image_write_to_memory)
+{
+	zval *IM;
+	VipsImage *image;
+	size_t arr_len;
+	uint8_t *arr;
+
+	VIPS_DEBUG_MSG("vips_image_write_to_memory:\n");
+
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "r", &IM) == FAILURE) {
+		RETURN_LONG(-1);
+	}
+
+	if ((image = (VipsImage *)zend_fetch_resource(Z_RES_P(IM),
+		"GObject", le_gobject)) == NULL) {
+		RETURN_LONG(-1);
+	}
+
+	if (!(arr = vips_image_write_to_memory(image, &arr_len))) {
+		RETURN_LONG(-1);
+	}
+
+	RETVAL_STRINGL((char *)arr, arr_len);
+	g_free(arr);
 }
 /* }}} */
 
@@ -1933,6 +2004,18 @@ ZEND_BEGIN_ARG_INFO(arginfo_vips_image_copy_memory, 0)
 	ZEND_ARG_INFO(0, image)
 ZEND_END_ARG_INFO()
 
+ZEND_BEGIN_ARG_INFO(arginfo_vips_image_new_from_memory, 0)
+	ZEND_ARG_INFO(0, array)
+	ZEND_ARG_INFO(0, width)
+	ZEND_ARG_INFO(0, height)
+	ZEND_ARG_INFO(0, bands)
+	ZEND_ARG_INFO(0, format)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO(arginfo_vips_image_write_to_memory, 0)
+	ZEND_ARG_INFO(0, image)
+ZEND_END_ARG_INFO()
+
 ZEND_BEGIN_ARG_INFO(arginfo_vips_foreign_find_load, 0)
 	ZEND_ARG_INFO(0, filename)
 ZEND_END_ARG_INFO()
@@ -2003,6 +2086,8 @@ const zend_function_entry vips_functions[] = {
 	PHP_FE(vips_image_write_to_file, arginfo_vips_image_write_to_file)
 	PHP_FE(vips_image_write_to_buffer, arginfo_vips_image_write_to_buffer)
 	PHP_FE(vips_image_copy_memory, arginfo_vips_image_copy_memory)
+	PHP_FE(vips_image_new_from_memory, arginfo_vips_image_new_from_memory)
+	PHP_FE(vips_image_write_to_memory, arginfo_vips_image_write_to_memory)
 	PHP_FE(vips_foreign_find_load, arginfo_vips_foreign_find_load)
 	PHP_FE(vips_foreign_find_load_buffer, arginfo_vips_foreign_find_load_buffer)
 	PHP_FE(vips_interpolate_new, arginfo_vips_interpolate_new)
