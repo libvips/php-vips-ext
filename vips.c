@@ -1768,6 +1768,7 @@ PHP_FUNCTION(vips_concurrency_set)
 
 	vips_concurrency_set(value); 
 }
+/* }}} */
 
 /* {{{ proto string vips_version()
    Returns the version number of the vips library */
