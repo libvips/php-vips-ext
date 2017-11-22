@@ -1457,7 +1457,7 @@ PHP_FUNCTION(vips_image_write_to_memory)
 
 	RETVAL_STRINGL((char *)arr, arr_len);
 
-    g_free(arr);
+	g_free(arr);
 }
 /* }}} */
 
