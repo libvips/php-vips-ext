@@ -1,6 +1,6 @@
 vips extension changelog
 
-Version 1.0.8 (2017-11-21)
+Version 1.0.8 (2017-11-23)
 --------------------------
 	* Add vips_version() [chregu]
 	  https://github.com/jcupitt/php-vips-ext/pull/15
