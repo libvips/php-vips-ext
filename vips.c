@@ -1782,6 +1782,46 @@ PHP_FUNCTION(vips_version)
 }
 /* }}} */
 
+/* {{{ proto integer vips_cache_get_max_mem()
+   Get max memory to use for operation cache */
+PHP_FUNCTION(vips_cache_get_max_mem)
+{
+	RETURN_LONG(vips_cache_get_max_mem());
+}
+/* }}} */
+
+/* {{{ proto integer vips_cache_get_max_files()
+   Get max number of open files for operation cache */
+PHP_FUNCTION(vips_cache_get_max_files)
+{
+	RETURN_LONG(vips_cache_get_max_files());
+}
+/* }}} */
+
+/* {{{ proto integer vips_cache_get_max()
+   Get max number of operations to cache */
+PHP_FUNCTION(vips_cache_get_max)
+{
+	RETURN_LONG(vips_cache_get_max());
+}
+/* }}} */
+
+/* {{{ proto integer vips_cache_get_size()
+   Get current cached operations */
+PHP_FUNCTION(vips_cache_get_size)
+{
+	RETURN_LONG(vips_cache_get_size());
+}
+/* }}} */
+
+/* {{{ proto integer vips_concurrency_get()
+   Get number of workers per threadpool */
+PHP_FUNCTION(vips_concurrency_get)
+{
+	RETURN_LONG(vips_concurrency_get());
+}
+/* }}} */
+
 /* {{{ php_vips_init_globals
  */
 /* Uncomment this function if you have INI entries
@@ -1931,7 +1971,22 @@ PHP_MINFO_FUNCTION(vips)
 	vips_snprintf(digits, 256, "%d", vips_version(2));
 	php_info_print_table_row(2, "Micro version", digits); 
 
-	php_info_print_table_row(2, "SIMD support with liborc", 
+	vips_snprintf(digits, 256, "%zd", vips_cache_get_max_mem());
+	php_info_print_table_row(2, "Cache max mem", digits);
+
+	vips_snprintf(digits, 256, "%d", vips_cache_get_max());
+	php_info_print_table_row(2, "Cache max operations", digits);
+
+	vips_snprintf(digits, 256, "%d", vips_cache_get_size());
+	php_info_print_table_row(2, "Cache current operations", digits);
+
+	vips_snprintf(digits, 256, "%d", vips_cache_get_max_files());
+	php_info_print_table_row(2, "Cache max open files", digits);
+
+	vips_snprintf(digits, 256, "%d", vips_concurrency_get());
+	php_info_print_table_row(2, "Concurrency", digits);
+
+	php_info_print_table_row(2, "SIMD support with liborc",
 		vips_vector_isenabled() ? "yes" : "no" ); 
 
 	php_info_print_table_row(2, "JPEG support", 
@@ -2075,6 +2130,21 @@ ZEND_BEGIN_ARG_INFO(arginfo_vips_concurrency_set, 0)
 	ZEND_ARG_INFO(0, value)
 ZEND_END_ARG_INFO()
 
+ZEND_BEGIN_ARG_INFO(arginfo_vips_cache_get_max, 0)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO(arginfo_vips_cache_get_max_mem, 0)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO(arginfo_vips_cache_get_max_files, 0)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO(arginfo_vips_cache_get_size, 0)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO(arginfo_vips_concurrency_get, 0)
+ZEND_END_ARG_INFO()
+
 ZEND_BEGIN_ARG_INFO(arginfo_vips_version, 0)
 ZEND_END_ARG_INFO()
 /* {{{ vips_functions[]
@@ -2104,6 +2174,11 @@ const zend_function_entry vips_functions[] = {
 	PHP_FE(vips_cache_set_max_mem, arginfo_vips_cache_set_max_mem)
 	PHP_FE(vips_cache_set_max_files, arginfo_vips_cache_set_max_files)
 	PHP_FE(vips_concurrency_set, arginfo_vips_concurrency_set)
+    PHP_FE(vips_cache_get_max, arginfo_vips_cache_get_max)
+	PHP_FE(vips_cache_get_max_mem, arginfo_vips_cache_get_max_mem)
+	PHP_FE(vips_cache_get_max_files, arginfo_vips_cache_get_max_files)
+    PHP_FE(vips_cache_get_size, arginfo_vips_cache_get_size)
+    PHP_FE(vips_concurrency_get, arginfo_vips_concurrency_get)
 	PHP_FE(vips_version, arginfo_vips_version)
 
 	PHP_FE_END	/* Must be the last line in vips_functions[] */
