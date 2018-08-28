@@ -1,5 +1,10 @@
 vips extension changelog
 
+Version 1.0.9 (2017-11-28)
+--------------------------
+	* Add cache and concurrency controls [chregu]
+	  https://github.com/jcupitt/php-vips-ext/pull/17
+
 Version 1.0.8 (2017-11-21)
 --------------------------
 	* Add vips_version() [chregu]

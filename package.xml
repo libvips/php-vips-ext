@@ -15,9 +15,9 @@ http://pear.php.net/dtd/package-2.0.xsd">
   <email>jcupitt@php.net</email>
   <active>yes</active>
  </lead>
- <date>2017-11-22</date>
+ <date>2017-11-28</date>
  <version>
-  <release>1.0.8</release>
+  <release>1.0.9</release>
   <api>1.0.0</api>
  </version>
  <stability>
@@ -26,8 +26,7 @@ http://pear.php.net/dtd/package-2.0.xsd">
  </stability>
  <license filesource="LICENSE.txt">MIT</license>
  <notes>
-	* Add vips_version() [chregu]
-	* Add vips_new_from_memory() / vips_write_to_memory() [kleisauke]
+	* Add cache and concurrency controls [chregu]
  </notes>
  <contents>
   <dir name="/">
@@ -35,7 +34,7 @@ http://pear.php.net/dtd/package-2.0.xsd">
    <file role='doc' name='CREDITS'/>
    <file role='doc' name='LICENSE.txt'/>
    <file role='doc' name='README.md'/>
-   <file role='doc' name='RELEASE-1.0.8'/>
+   <file role='doc' name='RELEASE-1.0.9'/>
    <file role='doc' name='ChangeLog'/>
 
    <file role='src' name='config.m4'/>
@@ -72,6 +71,10 @@ http://pear.php.net/dtd/package-2.0.xsd">
     <file role='test' name='034.phpt'/>
     <file role='test' name='035.phpt'/>
     <file role='test' name='036.phpt'/>
+    <file role='test' name='037.phpt'/>
+    <file role='test' name='038.phpt'/>
+    <file role='test' name='039.phpt'/>
+    <file role='test' name='040.phpt'/>
 
     <dir name="images">
      <file role='test' name='img_0076.jpg'/>
@@ -94,6 +97,15 @@ http://pear.php.net/dtd/package-2.0.xsd">
   <configureoption name="with-vips" default="yes" prompt="enable vips"/>
  </extsrcrelease>
  <changelog>
+
+  <release>
+   <stability><release>stable</release><api>stable</api></stability>
+   <version><release>1.0.9</release><api>1.0.0</api></version>
+   <date>2017-11-28</date>
+   <notes>
+	* Add cache and concurrency controls [chregu]
+   </notes>
+  </release>
 
   <release>
    <stability><release>stable</release><api>stable</api></stability>
