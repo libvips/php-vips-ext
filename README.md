@@ -2,7 +2,7 @@
 
 This extension lets you use the libvips image processing library from PHP 7. It 
 is intentionally very low-level: modules such as 
-https://github.com/jcupitt/php-vips try to layer a nice API on top of this.
+https://github.com/libvips/php-vips try to layer a nice API on top of this.
 
 libvips is fast and needs little memory. The [`vips-php-bench`](
 https://github.com/jcupitt/php-vips-bench) repository tests
@@ -27,7 +27,7 @@ single result called `"out"`.
 Use `vips_call()` to call any operation in the vips library. There are around 
 around 300 operations available, see the vips docs for an introduction:
 
-http://jcupitt.github.io/libvips/API/current/
+http://libvips.github.io/libvips/API/current/
 
 Arguments can be long, double, image, array of long, array of double or array
 of image. The final argument to `vips_call()` is an array of operation options. 
@@ -35,7 +35,7 @@ of image. The final argument to `vips_call()` is an array of operation options.
 `php-vips` layers a nice API, including full docs, on top of this extension, 
 see:
 
-https://github.com/jcupitt/php-vips
+https://github.com/libvips/php-vips
 
 ### Installing
 
@@ -66,7 +66,7 @@ Finally, add `vips` to your `composer.json` to pull in the high-level PHP API.
 
 The high-level API has all the documentation, see:
 
-https://github.com/jcupitt/php-vips
+https://github.com/libvips/php-vips
 
 ### Development: preparation
 
