@@ -1,16 +1,22 @@
 vips extension changelog
 
+Version 1.0.10 (2018-12-xx)
+--------------------------
+	* Fix win32 build [TBK]
+	  https://github.com/libvips/php-vips-ext/pull/24
+	* Update links for new home [jcupitt]
+
 Version 1.0.9 (2017-11-28)
 --------------------------
 	* Add cache and concurrency controls [chregu]
-	  https://github.com/jcupitt/php-vips-ext/pull/17
+	  https://github.com/libvips/php-vips-ext/pull/17
 
 Version 1.0.8 (2017-11-21)
 --------------------------
 	* Add vips_version() [chregu]
-	  https://github.com/jcupitt/php-vips-ext/pull/15
+	  https://github.com/libvips/php-vips-ext/pull/15
 	* Add vips_new_from_memory() / vips_write_to_memory() [kleisauke]
-	  https://github.com/jcupitt/php-vips-ext/pull/13
+	  https://github.com/libvips/php-vips-ext/pull/13
 
 Version 1.0.7 (2017-6-5)
 --------------------------
@@ -23,18 +29,23 @@ Version 1.0.6 (2017-4-15)
 Version 1.0.5 (2017-3-11)
 --------------------------
 	* Use VIPS_SONAME, if we can
-	* More stuff in php_info(), see https://github.com/jcupitt/php-vips/issues/32
-	* Add vips_foreign_find_load() and vips_foreign_find_load_buffer(), see https://github.com/jcupitt/php-vips/issues/37
+	* More stuff in php_info()
+	  https://github.com/libvips/php-vips/issues/32
+	* Add vips_foreign_find_load() and vips_foreign_find_load_buffer()
+	  https://github.com/libvips/php-vips/issues/37
 
 Version 1.0.4 (2016-12-30)
 --------------------------
-	* Improve graceful fix from 1.0.3, see https://github.com/jcupitt/php-vips/issues/27
-	* Better notes section in package.xml, see https://github.com/jcupitt/php-vips/issues/28
+	* Improve graceful fix from 1.0.3 
+	  https://github.com/libvips/php-vips/issues/27
+	* Better notes section in package.xml 
+	  https://github.com/libvips/php-vips/issues/28
 
 Version 1.0.3 (2016-12-27)
 --------------------------
 	* Lower min vips version to 8.2, see #4
-	* Lock libvips to fix graceful, see https://github.com/jcupitt/php-vips/issues/26
+	* Lock libvips to fix graceful 
+	  https://github.com/libvips/php-vips/issues/26
 
 Version 1.0.2 (2016-12-06)
 --------------------------

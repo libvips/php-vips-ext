@@ -15,9 +15,9 @@ http://pear.php.net/dtd/package-2.0.xsd">
   <email>jcupitt@php.net</email>
   <active>yes</active>
  </lead>
- <date>2018-10-04</date>
+ <date>2018-12-xx</date>
  <version>
-  <release>1.0.9</release>
+  <release>1.0.10</release>
   <api>1.0.0</api>
  </version>
  <stability>
@@ -26,7 +26,8 @@ http://pear.php.net/dtd/package-2.0.xsd">
  </stability>
  <license filesource="LICENSE.txt">MIT</license>
  <notes>
-	* Add cache and concurrency controls [chregu]
+	* Update links for new home [jcupitt]
+	* Fix win32 build [TBK]
  </notes>
  <contents>
   <dir name="/">
@@ -34,7 +35,7 @@ http://pear.php.net/dtd/package-2.0.xsd">
    <file role='doc' name='CREDITS'/>
    <file role='doc' name='LICENSE.txt'/>
    <file role='doc' name='README.md'/>
-   <file role='doc' name='RELEASE-1.0.9'/>
+   <file role='doc' name='RELEASE-1.0.10'/>
    <file role='doc' name='ChangeLog'/>
 
    <file role='src' name='config.m4'/>
@@ -100,6 +101,16 @@ http://pear.php.net/dtd/package-2.0.xsd">
 
   <release>
    <stability><release>stable</release><api>stable</api></stability>
+   <version><release>1.0.10</release><api>1.0.0</api></version>
+   <date>2018-12-xx</date>
+   <notes>
+	* Update links for new home [jcupitt]
+	* Fix win32 build [TBK]
+   </notes>
+  </release>
+
+  <release>
+   <stability><release>stable</release><api>stable</api></stability>
    <version><release>1.0.9</release><api>1.0.0</api></version>
    <date>2017-11-28</date>
    <notes>
@@ -141,8 +152,8 @@ http://pear.php.net/dtd/package-2.0.xsd">
    <date>2017-03-11</date>
    <notes>
 	* Use VIPS_SONAME, if we can
-	* More stuff in php_info(), see https://github.com/jcupitt/php-vips/issues/32
-	* Add vips_foreign_find_load() and vips_foreign_find_load_buffer(), see https://github.com/jcupitt/php-vips/issues/37
+	* More stuff in php_info(), see https://github.com/libvips/php-vips/issues/32
+	* Add vips_foreign_find_load() and vips_foreign_find_load_buffer(), see https://github.com/libvips/php-vips/issues/37
    </notes>
   </release>
 
@@ -151,8 +162,8 @@ http://pear.php.net/dtd/package-2.0.xsd">
    <version><release>1.0.4</release><api>1.0.0</api></version>
    <date>2016-12-30</date>
    <notes>
-	* Improve graceful fix from 1.0.3, see https://github.com/jcupitt/php-vips/issues/27
-	* Better notes section in package.xml, see https://github.com/jcupitt/php-vips/issues/28
+	* Improve graceful fix from 1.0.3, see https://github.com/libvips/php-vips/issues/27
+	* Better notes section in package.xml, see https://github.com/libvips/php-vips/issues/28
    </notes>
   </release>
 
@@ -162,7 +173,7 @@ http://pear.php.net/dtd/package-2.0.xsd">
    <date>2016-12-27</date>
    <notes>
 	* Lower min vips version to 8.2, see #4
-	* Lock libvips to fix graceful, see https://github.com/jcupitt/php-vips/issues/26
+	* Lock libvips to fix graceful, see https://github.com/libvips/php-vips/issues/26
    </notes>
   </release>
 
