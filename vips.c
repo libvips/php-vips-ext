@@ -2011,6 +2011,8 @@ PHP_MINFO_FUNCTION(vips)
 		vips_type_find("VipsOperation", "fitsload") ? "yes" : "no" ); 
 	php_info_print_table_row(2, "WebP support", 
 		vips_type_find("VipsOperation", "webpload") ? "yes" : "no" ); 
+	php_info_print_table_row(2, "HEIF support",
+		vips_type_find("VipsOperation", "heifload") ? "yes" : "no" );
 
 	php_info_print_table_row(2, "load with libMagick", 
 		vips_type_find("VipsOperation", "magickload") ? "yes" : "no" ); 
