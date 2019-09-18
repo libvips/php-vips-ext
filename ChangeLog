@@ -1,5 +1,10 @@
 vips extension changelog
 
+Version 1.0.11 (2019-9-18)
+--------------------------
+	* Add vips_image_write_to_array() [jcupitt]
+	  https://github.com/libvips/php-vips/issues/90
+
 Version 1.0.10 (2018-12-xx)
 --------------------------
 	* Fix win32 build [TBK]

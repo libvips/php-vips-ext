@@ -1461,6 +1461,91 @@ PHP_FUNCTION(vips_image_write_to_memory)
 }
 /* }}} */
 
+#define ADD_ELEMENTS(TYPE, APPEND, N) { \
+	TYPE *p = arr; \
+	size_t i; \
+	\
+	for (i = 0; i < (N); i++) \
+		APPEND(return_value, p[i]); \
+}
+
+/* {{{ proto array vips_image_write_to_array(resource image)
+   Write an image to a PHP array. */
+PHP_FUNCTION(vips_image_write_to_array)
+{
+	zval *IM;
+	VipsImage *image;
+	size_t arr_len;
+	uint8_t *arr;
+	size_t n;
+
+	VIPS_DEBUG_MSG("vips_image_write_to_array:\n");
+
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "r", &IM) == FAILURE) {
+		RETURN_LONG(-1);
+	}
+
+	if ((image = (VipsImage *)zend_fetch_resource(Z_RES_P(IM),
+		"GObject", le_gobject)) == NULL) {
+		RETURN_LONG(-1);
+	}
+
+	if (!(arr = vips_image_write_to_memory(image, &arr_len))) {
+		RETURN_LONG(-1);
+	}
+
+	array_init(return_value);
+	n = arr_len / vips_format_sizeof(image->BandFmt);
+	g_assert(arr_len % vips_format_sizeof(image->BandFmt) == 0);
+	switch (image->BandFmt) {
+	case VIPS_FORMAT_UCHAR:
+		ADD_ELEMENTS (unsigned char, add_next_index_long, n);
+		break;
+
+	case VIPS_FORMAT_CHAR:
+		ADD_ELEMENTS (signed char, add_next_index_long, n);
+		break;
+
+	case VIPS_FORMAT_USHORT:
+		ADD_ELEMENTS (unsigned short, add_next_index_long, n);
+		break;
+
+	case VIPS_FORMAT_SHORT:
+		ADD_ELEMENTS (signed short, add_next_index_long, n);
+		break;
+
+	case VIPS_FORMAT_UINT:
+		ADD_ELEMENTS (unsigned int, add_next_index_long, n);
+		break;
+
+	case VIPS_FORMAT_INT:
+		ADD_ELEMENTS (signed int, add_next_index_long, n);
+		break;
+
+	case VIPS_FORMAT_FLOAT:
+		ADD_ELEMENTS (float, add_next_index_double, n);
+		break;
+
+	case VIPS_FORMAT_DOUBLE:
+		ADD_ELEMENTS (double, add_next_index_double, n);
+		break;
+
+	case VIPS_FORMAT_COMPLEX:
+		ADD_ELEMENTS (float, add_next_index_double, n * 2);
+		break;
+
+	case VIPS_FORMAT_DPCOMPLEX:
+		ADD_ELEMENTS (double, add_next_index_double, n * 2);
+		break;
+
+	default:
+		break;
+	}
+
+	g_free(arr);
+}
+/* }}} */
+
 /* {{{ proto string|long vips_foreign_find_load(string filename)
    Find a loader for a file */
 PHP_FUNCTION(vips_foreign_find_load)
@@ -2075,6 +2160,10 @@ ZEND_BEGIN_ARG_INFO(arginfo_vips_image_write_to_memory, 0)
 	ZEND_ARG_INFO(0, image)
 ZEND_END_ARG_INFO()
 
+ZEND_BEGIN_ARG_INFO(arginfo_vips_image_write_to_array, 0)
+	ZEND_ARG_INFO(0, image)
+ZEND_END_ARG_INFO()
+
 ZEND_BEGIN_ARG_INFO(arginfo_vips_foreign_find_load, 0)
 	ZEND_ARG_INFO(0, filename)
 ZEND_END_ARG_INFO()
@@ -2162,6 +2251,7 @@ const zend_function_entry vips_functions[] = {
 	PHP_FE(vips_image_copy_memory, arginfo_vips_image_copy_memory)
 	PHP_FE(vips_image_new_from_memory, arginfo_vips_image_new_from_memory)
 	PHP_FE(vips_image_write_to_memory, arginfo_vips_image_write_to_memory)
+	PHP_FE(vips_image_write_to_array, arginfo_vips_image_write_to_array)
 	PHP_FE(vips_foreign_find_load, arginfo_vips_foreign_find_load)
 	PHP_FE(vips_foreign_find_load_buffer, arginfo_vips_foreign_find_load_buffer)
 	PHP_FE(vips_interpolate_new, arginfo_vips_interpolate_new)
