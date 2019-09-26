@@ -1462,7 +1462,7 @@ PHP_FUNCTION(vips_image_write_to_memory)
 /* }}} */
 
 #define ADD_ELEMENTS(TYPE, APPEND, N) { \
-	TYPE *p = arr; \
+	TYPE *p = (TYPE *) arr; \
 	size_t i; \
 	\
 	for (i = 0; i < (N); i++) \
