@@ -2266,11 +2266,11 @@ const zend_function_entry vips_functions[] = {
 	PHP_FE(vips_cache_set_max_mem, arginfo_vips_cache_set_max_mem)
 	PHP_FE(vips_cache_set_max_files, arginfo_vips_cache_set_max_files)
 	PHP_FE(vips_concurrency_set, arginfo_vips_concurrency_set)
-    PHP_FE(vips_cache_get_max, arginfo_vips_cache_get_max)
+	PHP_FE(vips_cache_get_max, arginfo_vips_cache_get_max)
 	PHP_FE(vips_cache_get_max_mem, arginfo_vips_cache_get_max_mem)
 	PHP_FE(vips_cache_get_max_files, arginfo_vips_cache_get_max_files)
-    PHP_FE(vips_cache_get_size, arginfo_vips_cache_get_size)
-    PHP_FE(vips_concurrency_get, arginfo_vips_concurrency_get)
+	PHP_FE(vips_cache_get_size, arginfo_vips_cache_get_size)
+	PHP_FE(vips_concurrency_get, arginfo_vips_concurrency_get)
 	PHP_FE(vips_version, arginfo_vips_version)
 
 	PHP_FE_END	/* Must be the last line in vips_functions[] */
