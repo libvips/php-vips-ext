@@ -2058,15 +2058,19 @@ PHP_MINFO_FUNCTION(vips)
 
 	vips_snprintf(digits, 256, "%zd", vips_cache_get_max_mem());
 	php_info_print_table_row(2, "Cache max mem", digits);
-
 	vips_snprintf(digits, 256, "%d", vips_cache_get_max());
 	php_info_print_table_row(2, "Cache max operations", digits);
-
 	vips_snprintf(digits, 256, "%d", vips_cache_get_size());
 	php_info_print_table_row(2, "Cache current operations", digits);
-
 	vips_snprintf(digits, 256, "%d", vips_cache_get_max_files());
 	php_info_print_table_row(2, "Cache max open files", digits);
+
+	vips_snprintf(digits, 256, "%d", vips_tracked_get_allocs());
+	php_info_print_table_row(2, "Memory allocations", digits);
+	vips_snprintf(digits, 256, "%zd", vips_tracked_get_mem());
+	php_info_print_table_row(2, "Memory currently allocated", digits);
+	vips_snprintf(digits, 256, "%zd", vips_tracked_get_mem_highwater());
+	php_info_print_table_row(2, "Memory high water", digits);
 
 	vips_snprintf(digits, 256, "%d", vips_concurrency_get());
 	php_info_print_table_row(2, "Concurrency", digits);

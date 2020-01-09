@@ -1,5 +1,10 @@
 vips extension changelog
 
+Version 1.0.11 (2020-1-xx)
+--------------------------
+	* More php_info() output [jcupitt]
+	  https://github.com/libvips/php-vips/issues/97
+
 Version 1.0.10 (2018-12-xx)
 --------------------------
 	* Fix win32 build [TBK]
