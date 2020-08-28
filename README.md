@@ -91,7 +91,7 @@ libvips website, or build your own.
 $ pear package
 ```
 
-to make `vips-1.0.9.tgz`.
+To make `vips-1.0.11.tgz`.
 
 To install by hand:
 

@@ -1,7 +1,9 @@
 vips extension changelog
 
-Version 1.0.11 (2020-08-xx)
+Version 1.0.11 (2020-1-xx)
 --------------------------
+	* More php_info() output [jcupitt]
+	  https://github.com/libvips/php-vips/issues/97
 	* add vips_image_set_type()
 	* add vips_type_from_name()
 

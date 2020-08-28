@@ -15,7 +15,7 @@ http://pear.php.net/dtd/package-2.0.xsd">
   <email>jcupitt@php.net</email>
   <active>yes</active>
  </lead>
- <date>2020-08-26</date>
+ <date>2020-08-28</date>
  <version>
   <release>1.0.11</release>
   <api>1.0.0</api>
@@ -27,6 +27,7 @@ http://pear.php.net/dtd/package-2.0.xsd">
  <license filesource="LICENSE.txt">MIT</license>
  <notes>
 	* add vips_image_set_type()
+	* More php_info() output [jcupitt]
  </notes>
  <contents>
   <dir name="/">
@@ -75,9 +76,12 @@ http://pear.php.net/dtd/package-2.0.xsd">
     <file role='test' name='038.phpt'/>
     <file role='test' name='039.phpt'/>
     <file role='test' name='040.phpt'/>
+    <file role='test' name='041.phpt'/>
+    <file role='test' name='042.phpt'/>
 
     <dir name="images">
      <file role='test' name='img_0076.jpg'/>
+     <file role='test' name='sRGB.icc'/>
     </dir>
   </dir>
  </dir>
@@ -101,9 +105,10 @@ http://pear.php.net/dtd/package-2.0.xsd">
   <release>
    <stability><release>stable</release><api>stable</api></stability>
    <version><release>1.0.11</release><api>1.0.0</api></version>
-   <date>2020-07-26</date>
+   <date>2020-08-28</date>
    <notes>
 	* add vips_image_set_type()
+	* More php_info() output [jcupitt]
    </notes>
   </release>
 
