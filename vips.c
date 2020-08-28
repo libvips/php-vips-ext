@@ -1666,6 +1666,7 @@ PHP_FUNCTION(vips_image_get_typeof)
 }
 /* }}} */
 
+
 /* {{{ proto long vips_image_set(resource image, string field, mixed value)
    Set field on image */
 PHP_FUNCTION(vips_image_set)
@@ -1743,6 +1744,63 @@ PHP_FUNCTION(vips_image_set)
 			default:
 				break;
 		}
+	}
+
+	g_value_init(&gvalue, type);
+
+	if (vips_php_zval_to_gval(NULL, zvalue, &gvalue)) {
+		RETURN_LONG(-1);
+	}
+
+	vips_image_set(image, field_name, &gvalue);
+
+	g_value_unset(&gvalue);
+
+	RETURN_LONG(0);
+}
+/* }}} */
+
+/* {{{ proto long vips_type_from_name(string name)
+   find the gtype for a type name */
+PHP_FUNCTION(vips_type_from_name)
+{
+	char *name;
+	size_t name_len;
+	GType gtype;
+
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "s", 
+		&name, &name_len) == FAILURE) {
+		RETURN_LONG(-1);
+	}
+
+	RETURN_LONG(g_type_from_name(name));
+}
+/* }}} */
+
+/* {{{ proto long vips_image_set_type(resource image, integer gtype, string field, mixed value)
+   Set field on image */
+PHP_FUNCTION(vips_image_set_type)
+{
+	zval *im;
+	long type;
+	char *field_name;
+	size_t field_name_len;
+	zval *zvalue;
+	VipsImage *image;
+	GValue gvalue = { 0 };
+
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "rlsz", 
+		&im, &type, &field_name, &field_name_len, &zvalue) == FAILURE) {
+		RETURN_LONG(-1);
+	}
+
+	if ((image = (VipsImage *)zend_fetch_resource(Z_RES_P(im), 
+		"GObject", le_gobject)) == NULL) {
+		RETURN_LONG(-1);
+	}
+
+	if (type <= 0) {
+		RETURN_LONG(-1);
 	}
 
 	g_value_init(&gvalue, type);
@@ -2197,6 +2255,17 @@ ZEND_BEGIN_ARG_INFO(arginfo_vips_image_set, 0)
 	ZEND_ARG_INFO(0, value)
 ZEND_END_ARG_INFO()
 
+ZEND_BEGIN_ARG_INFO(arginfo_vips_type_from_name, 0)
+	ZEND_ARG_INFO(0, name)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO(arginfo_vips_image_set_type, 0)
+	ZEND_ARG_INFO(0, image)
+	ZEND_ARG_INFO(0, type)
+	ZEND_ARG_INFO(0, field)
+	ZEND_ARG_INFO(0, value)
+ZEND_END_ARG_INFO()
+
 ZEND_BEGIN_ARG_INFO(arginfo_vips_image_remove, 0)
 	ZEND_ARG_INFO(0, image)
 	ZEND_ARG_INFO(0, field)
@@ -2260,6 +2329,8 @@ const zend_function_entry vips_functions[] = {
 	PHP_FE(vips_image_get, arginfo_vips_image_get)
 	PHP_FE(vips_image_get_typeof, arginfo_vips_image_get_typeof)
 	PHP_FE(vips_image_set, arginfo_vips_image_set)
+	PHP_FE(vips_type_from_name, arginfo_vips_type_from_name)
+	PHP_FE(vips_image_set_type, arginfo_vips_image_set_type)
 	PHP_FE(vips_image_remove, arginfo_vips_image_remove)
 	PHP_FE(vips_error_buffer, arginfo_vips_error_buffer)
 	PHP_FE(vips_cache_set_max, arginfo_vips_cache_set_max)

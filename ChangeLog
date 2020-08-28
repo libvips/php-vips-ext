@@ -1,5 +1,10 @@
 vips extension changelog
 
+Version 1.0.11 (2020-08-xx)
+--------------------------
+	* add vips_image_set_type()
+	* add vips_type_from_name()
+
 Version 1.0.10 (2018-12-xx)
 --------------------------
 	* Fix win32 build [TBK]
