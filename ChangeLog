@@ -1,5 +1,10 @@
 vips extension changelog
 
+Version 1.0.12 (2020-8-xx)
+--------------------------
+	* vips_image_set_type() can be passed a type name
+	  https://github.com/libvips/php-vips-ext/issues/38
+
 Version 1.0.11 (2020-1-xx)
 --------------------------
 	* More php_info() output [jcupitt]

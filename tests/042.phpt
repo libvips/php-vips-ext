@@ -7,12 +7,11 @@ can set metadata
   $filename = dirname(__FILE__) . "/images/img_0076.jpg";
   $profilename = dirname(__FILE__) . "/images/sRGB.icc";
   $image = vips_image_new_from_file($filename)["out"];
-  $blob_type = vips_type_from_name("VipsBlob");
   $data = file_get_contents($profilename);
   $output_filename = dirname(__FILE__) . "/x.tif";
 
   $image = vips_call("copy", $image)["out"];
-  $result = vips_image_set_type($image, $blob_type, "icc-profile-data", $data);
+  $result = vips_image_set_type($image, "VipsBlob", "icc-profile-data", $data);
   if ($result == 0) {
     echo "pass set_metadata\n";
   }

@@ -1777,19 +1777,20 @@ PHP_FUNCTION(vips_type_from_name)
 }
 /* }}} */
 
-/* {{{ proto long vips_image_set_type(resource image, integer gtype, string field, mixed value)
+/* {{{ proto long vips_image_set_type(resource image, integer|string type, string field, mixed value)
    Set field on image */
 PHP_FUNCTION(vips_image_set_type)
 {
 	zval *im;
-	long type;
+	zval *type;
 	char *field_name;
 	size_t field_name_len;
 	zval *zvalue;
 	VipsImage *image;
+	GType gtype;
 	GValue gvalue = { 0 };
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS(), "rlsz", 
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "rzsz", 
 		&im, &type, &field_name, &field_name_len, &zvalue) == FAILURE) {
 		RETURN_LONG(-1);
 	}
@@ -1799,11 +1800,27 @@ PHP_FUNCTION(vips_image_set_type)
 		RETURN_LONG(-1);
 	}
 
-	if (type <= 0) {
+	switch (Z_TYPE_P(type)) {
+		case IS_LONG:
+			/* On 32-bit platforms, PHP's long is only 32-bits, so it can't
+			 * hold a GType. We need to be able accept string as well.
+			 */
+			gtype = zval_get_long(type);
+			break;
+
+		case IS_STRING: 
+			gtype = g_type_from_name(ZSTR_VAL(zval_get_string(type)));
+			break;
+
+		default:
+			gtype = 0;
+	}
+
+	if (gtype <= 0) {
 		RETURN_LONG(-1);
 	}
 
-	g_value_init(&gvalue, type);
+	g_value_init(&gvalue, gtype);
 
 	if (vips_php_zval_to_gval(NULL, zvalue, &gvalue)) {
 		RETURN_LONG(-1);
