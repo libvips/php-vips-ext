@@ -10,12 +10,12 @@ function vips_image_new_from_file(string $filename, ?array $options = []): array
 /**
  * @return array<string, mixed>|int
  */
-function vips_image_new_from_buffer(string $filename, ?string $option_string = "", ?array $options = []): array|int {}
+function vips_image_new_from_buffer(string $buffer, ?string $option_string = "", ?array $options = []): array|int {}
 
 /**
  * @return resource
  */
-function vips_image_new_from_array(array $coefficients, ?float $scale = 1.0, ?float $offset = 0.0) {}
+function vips_image_new_from_array(array $array, ?float $scale = 1.0, ?float $offset = 0.0) {}
 
 /**
  * @param resource $image
