@@ -143,6 +143,15 @@ $ make install
 Add `extension=vips.so` to `php.ini`, perhaps in `~/vips/lib/php.ini`, 
 if you configured php as above. 
 
+### Development: regenerate `vips_arginfo.h`
+
+Run:
+
+```
+$ curl -LO https://github.com/php/php-src/raw/ffacda14b88be797a466f472359f306d626e698f/build/gen_stub.php
+$ php gen_stub.php
+```
+
 ### Links
 
 http://php.net/manual/en/internals2.php
