@@ -1,6 +1,11 @@
 dnl $Id$
 dnl config.m4 for extension vips
 
+m4_include(m4/ax_require_defined.m4)
+m4_include(m4/ax_append_flag.m4)
+m4_include(m4/ax_check_link_flag.m4)
+m4_include(m4/ax_append_link_flags.m4)
+
 PHP_ARG_WITH(vips, for vips support,
 [  --with-vips             Include vips support])
 
@@ -34,6 +39,10 @@ if test x"$PHP_VIPS" != x"no"; then
     AC_MSG_ERROR([libvips not found.  Check config.log for more information.])
   ],[$VIPS_LIBS]
   )
+
+  # Mark DSO non-deletable at runtime.
+  # See: https://github.com/libvips/php-vips-ext/issues/43
+  AX_APPEND_LINK_FLAGS([-Wl,-z,nodelete])
 
   AC_DEFINE(HAVE_VIPS, 1, [Whether you have vips])
   PHP_NEW_EXTENSION(vips, vips.c, $ext_shared,, -DZEND_ENABLE_STATIC_TSRMLS_CACHE=1 $VIPS_CFLAGS)
