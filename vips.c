@@ -24,6 +24,44 @@
 ZEND_DECLARE_MODULE_GLOBALS(vips)
 */
 
+/* backward compat macros */
+
+#ifndef IS_VOID
+# define IS_VOID 0
+#endif /* !defined(IS_VOID) */
+
+#ifndef IS_MIXED
+# define IS_MIXED 0
+#endif /* !defined(IS_MIXED) */
+
+#ifndef ZEND_BEGIN_ARG_WITH_RETURN_TYPE_MASK_EX
+# define ZEND_BEGIN_ARG_WITH_RETURN_TYPE_MASK_EX(name, return_reference, num_args, type) \
+  ZEND_BEGIN_ARG_INFO_EX(name, 0, return_reference, num_args)
+#endif /* !defined(ZEND_BEGIN_ARG_WITH_RETURN_TYPE_MASK_EX) */
+
+#ifndef ZEND_ARG_TYPE_MASK
+# define ZEND_ARG_TYPE_MASK(pass_by_ref, name, type_mask, default_value) \
+  ZEND_ARG_TYPE_INFO(pass_by_ref, name, 0, 0)
+#endif /* !defined(ZEND_ARG_TYPE_MASK) */
+
+#ifndef ZEND_ARG_VARIADIC_TYPE_INFO
+# define ZEND_ARG_VARIADIC_TYPE_INFO(pass_by_ref, name, type_hint, allow_null) { #name, NULL, type_hint, pass_by_ref, allow_null, 1 },
+#endif /* !defined(ZEND_ARG_VARIADIC_TYPE_INFO) */
+
+#ifndef ZEND_ARG_TYPE_INFO_WITH_DEFAULT_VALUE
+# define ZEND_ARG_TYPE_INFO_WITH_DEFAULT_VALUE(pass_by_ref, name, type_hint, allow_null, default_value) \
+  ZEND_ARG_TYPE_INFO(pass_by_ref, name, type_hint, allow_null)
+#endif /* !defined(ZEND_ARG_TYPE_INFO_WITH_DEFAULT_VALUE) */
+
+#if PHP_VERSION_ID < 70200
+# undef ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX
+# define ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(name, return_reference, required_num_args, class_name, allow_null) \
+  static const zend_internal_arg_info name[] = { \
+    { (const char*)(zend_uintptr_t)(required_num_args), ( #class_name ), 0, return_reference, allow_null, 0 },
+#endif /* PHP_VERSION_ID < 70200 */
+
+#include "vips_arginfo.h"
+
 /* True global resources - no need for thread safety here */
 static int le_gobject;
 
@@ -1047,7 +1085,7 @@ vips_php_call_array(const char *operation_name, zval *instance,
 
 /* }}} */
 
-/* {{{ proto mixed vips_php_call(string operation_name, resource instance [, more])
+/* {{{ proto array|long vips_call(string operation_name, resource instance [, mixed args])
    Call any vips operation */
 
 PHP_FUNCTION(vips_call)
@@ -1094,7 +1132,7 @@ PHP_FUNCTION(vips_call)
 }
 /* }}} */
 
-/* {{{ proto resource vips_image_new_from_file(string filename [, array options])
+/* {{{ proto array|long vips_image_new_from_file(string filename [, array options])
    Open an image from a filename */
 PHP_FUNCTION(vips_image_new_from_file)
 {
@@ -1138,7 +1176,7 @@ PHP_FUNCTION(vips_image_new_from_file)
 }
 /* }}} */
 
-/* {{{ proto resource vips_image_new_from_buffer(string buffer [, string option_string, array options])
+/* {{{ proto array|long vips_image_new_from_buffer(string buffer [, string option_string, array options])
    Open an image from a string */
 PHP_FUNCTION(vips_image_new_from_buffer)
 {
@@ -1237,7 +1275,7 @@ PHP_FUNCTION(vips_image_new_from_array)
 }
 /* }}} */
 
-/* {{{ proto resource vips_interpolate_new(string name])
+/* {{{ proto resource vips_interpolate_new(string name)
    make a new interpolator */
 PHP_FUNCTION(vips_interpolate_new)
 {
@@ -1260,7 +1298,7 @@ PHP_FUNCTION(vips_interpolate_new)
 }
 /* }}} */
 
-/* {{{ proto long vips_image_write_to_file(resource image, string filename [, array options])
+/* {{{ proto array|long vips_image_write_to_file(resource image, string filename [, array options])
    Write an image to a filename */
 PHP_FUNCTION(vips_image_write_to_file)
 {
@@ -1311,7 +1349,7 @@ PHP_FUNCTION(vips_image_write_to_file)
 }
 /* }}} */
 
-/* {{{ proto string|long vips_image_write_to_buffer(resource image, string suffix [, array options])
+/* {{{ proto array|long vips_image_write_to_buffer(resource image, string suffix [, array options])
    Write an image to a string */
 PHP_FUNCTION(vips_image_write_to_buffer)
 {
@@ -1354,7 +1392,7 @@ PHP_FUNCTION(vips_image_write_to_buffer)
 }
 /* }}} */
 
-/* {{{ proto resource vips_image_copy_memory(resource image)
+/* {{{ proto array|long vips_image_copy_memory(resource image)
    Copy an image to a memory image */
 PHP_FUNCTION(vips_image_copy_memory)
 {
@@ -1388,7 +1426,7 @@ PHP_FUNCTION(vips_image_copy_memory)
 }
 /* }}} */
 
-/* {{{ proto resource vips_image_new_from_memory(string data, integer width, integer height, integer bands, string format)
+/* {{{ proto array|long vips_image_new_from_memory(string memory, integer width, integer height, integer bands, string format)
    Wrap an image around a memory array. */
 PHP_FUNCTION(vips_image_new_from_memory)
 {
@@ -1431,7 +1469,7 @@ PHP_FUNCTION(vips_image_new_from_memory)
 }
 /* }}} */
 
-/* {{{ proto string vips_image_write_to_memory(resource image)
+/* {{{ proto string|long vips_image_write_to_memory(resource image)
    Write an image to a memory array. */
 PHP_FUNCTION(vips_image_write_to_memory)
 {
@@ -1469,7 +1507,7 @@ PHP_FUNCTION(vips_image_write_to_memory)
 		APPEND(return_value, p[i]); \
 }
 
-/* {{{ proto array vips_image_write_to_array(resource image)
+/* {{{ proto array|long vips_image_write_to_array(resource image)
    Write an image to a PHP array. */
 PHP_FUNCTION(vips_image_write_to_array)
 {
@@ -1588,7 +1626,7 @@ PHP_FUNCTION(vips_foreign_find_load_buffer)
 }
 /* }}} */
 
-/* {{{ proto array vips_image_get(resource image, string field)
+/* {{{ proto array|long vips_image_get(resource image, string field)
    Fetch field from image */
 PHP_FUNCTION(vips_image_get)
 {
@@ -2195,186 +2233,12 @@ PHP_MINFO_FUNCTION(vips)
 }
 /* }}} */
 
-ZEND_BEGIN_ARG_INFO(arginfo_vips_image_new_from_file, 0)
-	ZEND_ARG_INFO(0, filename)
-	ZEND_ARG_INFO(0, options)
-ZEND_END_ARG_INFO()
-
-ZEND_BEGIN_ARG_INFO(arginfo_vips_image_new_from_buffer, 0)
-	ZEND_ARG_INFO(0, buffer)
-	ZEND_ARG_INFO(0, option_string)
-	ZEND_ARG_INFO(0, options)
-ZEND_END_ARG_INFO()
-
-ZEND_BEGIN_ARG_INFO(arginfo_vips_image_new_from_array, 0)
-	ZEND_ARG_INFO(0, array)
-	ZEND_ARG_INFO(0, scale)
-	ZEND_ARG_INFO(0, offset)
-ZEND_END_ARG_INFO()
-
-ZEND_BEGIN_ARG_INFO(arginfo_vips_image_write_to_file, 0)
-	ZEND_ARG_INFO(0, image)
-	ZEND_ARG_INFO(0, filename)
-	ZEND_ARG_INFO(0, options)
-ZEND_END_ARG_INFO()
-
-ZEND_BEGIN_ARG_INFO(arginfo_vips_image_write_to_buffer, 0)
-	ZEND_ARG_INFO(0, image)
-	ZEND_ARG_INFO(0, options)
-ZEND_END_ARG_INFO()
-
-ZEND_BEGIN_ARG_INFO(arginfo_vips_image_copy_memory, 0)
-	ZEND_ARG_INFO(0, image)
-ZEND_END_ARG_INFO()
-
-ZEND_BEGIN_ARG_INFO(arginfo_vips_image_new_from_memory, 0)
-	ZEND_ARG_INFO(0, array)
-	ZEND_ARG_INFO(0, width)
-	ZEND_ARG_INFO(0, height)
-	ZEND_ARG_INFO(0, bands)
-	ZEND_ARG_INFO(0, format)
-ZEND_END_ARG_INFO()
-
-ZEND_BEGIN_ARG_INFO(arginfo_vips_image_write_to_memory, 0)
-	ZEND_ARG_INFO(0, image)
-ZEND_END_ARG_INFO()
-
-ZEND_BEGIN_ARG_INFO(arginfo_vips_image_write_to_array, 0)
-	ZEND_ARG_INFO(0, image)
-ZEND_END_ARG_INFO()
-
-ZEND_BEGIN_ARG_INFO(arginfo_vips_foreign_find_load, 0)
-	ZEND_ARG_INFO(0, filename)
-ZEND_END_ARG_INFO()
-
-ZEND_BEGIN_ARG_INFO(arginfo_vips_interpolate_new, 0)
-	ZEND_ARG_INFO(0, name)
-ZEND_END_ARG_INFO()
-
-ZEND_BEGIN_ARG_INFO(arginfo_vips_foreign_find_load_buffer, 0)
-	ZEND_ARG_INFO(0, buffer)
-ZEND_END_ARG_INFO()
-
-ZEND_BEGIN_ARG_INFO(arginfo_vips_call, 0)
-	ZEND_ARG_INFO(0, operation_name)
-	ZEND_ARG_INFO(0, instance)
-ZEND_END_ARG_INFO()
-
-ZEND_BEGIN_ARG_INFO(arginfo_vips_image_get, 0)
-	ZEND_ARG_INFO(0, image)
-	ZEND_ARG_INFO(0, field)
-ZEND_END_ARG_INFO()
-
-ZEND_BEGIN_ARG_INFO(arginfo_vips_image_get_typeof, 0)
-	ZEND_ARG_INFO(0, image)
-	ZEND_ARG_INFO(0, field)
-ZEND_END_ARG_INFO()
-
-ZEND_BEGIN_ARG_INFO(arginfo_vips_image_set, 0)
-	ZEND_ARG_INFO(0, image)
-	ZEND_ARG_INFO(0, field)
-	ZEND_ARG_INFO(0, value)
-ZEND_END_ARG_INFO()
-
-ZEND_BEGIN_ARG_INFO(arginfo_vips_type_from_name, 0)
-	ZEND_ARG_INFO(0, name)
-ZEND_END_ARG_INFO()
-
-ZEND_BEGIN_ARG_INFO(arginfo_vips_image_set_type, 0)
-	ZEND_ARG_INFO(0, image)
-	ZEND_ARG_INFO(0, type)
-	ZEND_ARG_INFO(0, field)
-	ZEND_ARG_INFO(0, value)
-ZEND_END_ARG_INFO()
-
-ZEND_BEGIN_ARG_INFO(arginfo_vips_image_remove, 0)
-	ZEND_ARG_INFO(0, image)
-	ZEND_ARG_INFO(0, field)
-ZEND_END_ARG_INFO()
-
-ZEND_BEGIN_ARG_INFO(arginfo_vips_error_buffer, 0)
-ZEND_END_ARG_INFO()
-
-ZEND_BEGIN_ARG_INFO(arginfo_vips_cache_set_max, 0)
-	ZEND_ARG_INFO(0, value)
-ZEND_END_ARG_INFO()
-
-ZEND_BEGIN_ARG_INFO(arginfo_vips_cache_set_max_mem, 0)
-	ZEND_ARG_INFO(0, value)
-ZEND_END_ARG_INFO()
-
-ZEND_BEGIN_ARG_INFO(arginfo_vips_cache_set_max_files, 0)
-	ZEND_ARG_INFO(0, value)
-ZEND_END_ARG_INFO()
-
-ZEND_BEGIN_ARG_INFO(arginfo_vips_concurrency_set, 0)
-	ZEND_ARG_INFO(0, value)
-ZEND_END_ARG_INFO()
-
-ZEND_BEGIN_ARG_INFO(arginfo_vips_cache_get_max, 0)
-ZEND_END_ARG_INFO()
-
-ZEND_BEGIN_ARG_INFO(arginfo_vips_cache_get_max_mem, 0)
-ZEND_END_ARG_INFO()
-
-ZEND_BEGIN_ARG_INFO(arginfo_vips_cache_get_max_files, 0)
-ZEND_END_ARG_INFO()
-
-ZEND_BEGIN_ARG_INFO(arginfo_vips_cache_get_size, 0)
-ZEND_END_ARG_INFO()
-
-ZEND_BEGIN_ARG_INFO(arginfo_vips_concurrency_get, 0)
-ZEND_END_ARG_INFO()
-
-ZEND_BEGIN_ARG_INFO(arginfo_vips_version, 0)
-ZEND_END_ARG_INFO()
-/* {{{ vips_functions[]
- *
- * Every user visible function must have an entry in vips_functions[].
- */
-const zend_function_entry vips_functions[] = {
-	PHP_FE(vips_image_new_from_file, arginfo_vips_image_new_from_file)
-	PHP_FE(vips_image_new_from_buffer, arginfo_vips_image_new_from_buffer)
-	PHP_FE(vips_image_new_from_array, arginfo_vips_image_new_from_array)
-	PHP_FE(vips_image_write_to_file, arginfo_vips_image_write_to_file)
-	PHP_FE(vips_image_write_to_buffer, arginfo_vips_image_write_to_buffer)
-	PHP_FE(vips_image_copy_memory, arginfo_vips_image_copy_memory)
-	PHP_FE(vips_image_new_from_memory, arginfo_vips_image_new_from_memory)
-	PHP_FE(vips_image_write_to_memory, arginfo_vips_image_write_to_memory)
-	PHP_FE(vips_image_write_to_array, arginfo_vips_image_write_to_array)
-	PHP_FE(vips_foreign_find_load, arginfo_vips_foreign_find_load)
-	PHP_FE(vips_foreign_find_load_buffer, arginfo_vips_foreign_find_load_buffer)
-	PHP_FE(vips_interpolate_new, arginfo_vips_interpolate_new)
-
-	PHP_FE(vips_call, arginfo_vips_call)
-	PHP_FE(vips_image_get, arginfo_vips_image_get)
-	PHP_FE(vips_image_get_typeof, arginfo_vips_image_get_typeof)
-	PHP_FE(vips_image_set, arginfo_vips_image_set)
-	PHP_FE(vips_type_from_name, arginfo_vips_type_from_name)
-	PHP_FE(vips_image_set_type, arginfo_vips_image_set_type)
-	PHP_FE(vips_image_remove, arginfo_vips_image_remove)
-	PHP_FE(vips_error_buffer, arginfo_vips_error_buffer)
-	PHP_FE(vips_cache_set_max, arginfo_vips_cache_set_max)
-	PHP_FE(vips_cache_set_max_mem, arginfo_vips_cache_set_max_mem)
-	PHP_FE(vips_cache_set_max_files, arginfo_vips_cache_set_max_files)
-	PHP_FE(vips_concurrency_set, arginfo_vips_concurrency_set)
-	PHP_FE(vips_cache_get_max, arginfo_vips_cache_get_max)
-	PHP_FE(vips_cache_get_max_mem, arginfo_vips_cache_get_max_mem)
-	PHP_FE(vips_cache_get_max_files, arginfo_vips_cache_get_max_files)
-	PHP_FE(vips_cache_get_size, arginfo_vips_cache_get_size)
-	PHP_FE(vips_concurrency_get, arginfo_vips_concurrency_get)
-	PHP_FE(vips_version, arginfo_vips_version)
-
-	PHP_FE_END	/* Must be the last line in vips_functions[] */
-};
-/* }}} */
-
 /* {{{ vips_module_entry
  */
 zend_module_entry vips_module_entry = {
 	STANDARD_MODULE_HEADER,
 	"vips",
-	vips_functions,
+	ext_functions,
 	PHP_MINIT(vips),
 	PHP_MSHUTDOWN(vips),
 	PHP_RINIT(vips),		/* Replace with NULL if there's nothing to do at request start */

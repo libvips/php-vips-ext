@@ -30,9 +30,13 @@ missing
 mkinstalldirs
 modules
 run-tests.php
+gen_stub.php
 tests/*/*.diff
 tests/*/*.out
 tests/*/*.php
 tests/*/*.exp
 tests/*/*.log
 tests/*/*.sh
+
+# Used by gen_stub.php
+PHP-Parser-*
