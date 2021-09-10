@@ -1,8 +1,11 @@
 # Low-level PHP binding for libvips 
 
-This extension lets you use the libvips image processing library from PHP 7. It 
-is intentionally very low-level: modules such as 
-https://github.com/libvips/php-vips try to layer a nice API on top of this.
+This extension lets you use the libvips image processing library
+from PHP 7. 
+
+This is not supposed to be used directly! Install this, then use 
+[php-vips](https://github.com/libvips/php-vips) to layer a nice (and
+documented!) API on top of this extension.
 
 libvips is fast and needs little memory. The [`vips-php-bench`](
 https://github.com/jcupitt/php-vips-bench) repository tests
