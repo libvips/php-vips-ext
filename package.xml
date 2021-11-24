@@ -44,6 +44,13 @@ http://pear.php.net/dtd/package-2.0.xsd">
    <file role='src' name='vips.stub.php'/>
    <file role='src' name='vips_arginfo.h'/>
 
+   <dir name="m4">
+    <file role='src' name='ax_append_flag.m4'/>
+    <file role='src' name='ax_append_link_flags.m4'/>
+    <file role='src' name='ax_check_link_flag.m4'/>
+    <file role='src' name='ax_require_defined.m4'/>
+   </dir>
+
    <dir name="tests">
     <file role='test' name='001.phpt'/>
     <file role='test' name='002.phpt'/>
