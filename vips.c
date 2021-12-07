@@ -1898,6 +1898,52 @@ PHP_FUNCTION(vips_image_remove)
 }
 /* }}} */
 
+/* {{{ proto array|long vips_image_get_fields(resource image)
+   Get fields from image metadata */
+PHP_FUNCTION(vips_image_get_fields)
+{
+                zval *im;
+        VipsImage *image;
+        gchar **gvalue;
+        gchar* tmp = NULL;
+        int i = 0;
+        zval fields;
+
+        if (zend_parse_parameters(ZEND_NUM_ARGS(), "r", &im) == FAILURE) {
+            RETURN_LONG(-1);
+        }
+
+        if ((image = (VipsImage *)zend_fetch_resource(Z_RES_P(im),
+        "GObject", le_gobject)) == NULL) {
+            RETURN_LONG(-1);
+        }
+
+        gvalue = vips_image_get_fields(image);
+
+        array_init(&fields);
+
+        while((tmp = gvalue[i]) != NULL){
+            VIPS_DEBUG_MSG("%s\n", tmp);
+            VIPS_DEBUG_MSG("%llu\n", strlen(tmp));
+
+            zend_string *str = zend_string_init(tmp, strlen(tmp), 0);
+
+            VIPS_DEBUG_MSG("This is my string: %s\n", ZSTR_VAL(str));
+            VIPS_DEBUG_MSG("It is %zd char long\n", ZSTR_LEN(str)); // %zd is the printf format for size_t
+
+            add_next_index_str(&fields, str);
+            i++;
+        }
+
+//        g_object_unref(gvalue);
+
+        /* Return as an array for all OK, -1 for error.
+         */
+        array_init(return_value);
+        add_assoc_zval(return_value, "out", &fields);
+}
+/* }}} */
+
 /* {{{ proto string vips_error_buffer()
    Fetch and clear the vips error buffer */
 PHP_FUNCTION(vips_error_buffer)
