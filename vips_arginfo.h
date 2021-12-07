@@ -1,5 +1,5 @@
 /* This is a generated file, edit the .stub.php file instead.
- * Stub hash: b0a895aa400527f647c2f9bd728c4e8a94cb0c9b */
+ * Stub hash: 02c5e68c129bc64f2b1ff5d5fb4b083b3fb5f3bc */
 
 ZEND_BEGIN_ARG_WITH_RETURN_TYPE_MASK_EX(arginfo_vips_image_new_from_file, 0, 1, MAY_BE_ARRAY|MAY_BE_LONG)
 	ZEND_ARG_TYPE_INFO(0, filename, IS_STRING, 0)
@@ -95,6 +95,8 @@ ZEND_END_ARG_INFO()
 
 #define arginfo_vips_image_remove arginfo_vips_image_get_typeof
 
+#define arginfo_vips_image_get_fields arginfo_vips_image_copy_memory
+
 ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_vips_error_buffer, 0, 0, IS_STRING, 0)
 ZEND_END_ARG_INFO()
 
@@ -141,6 +143,7 @@ ZEND_FUNCTION(vips_image_set);
 ZEND_FUNCTION(vips_type_from_name);
 ZEND_FUNCTION(vips_image_set_type);
 ZEND_FUNCTION(vips_image_remove);
+ZEND_FUNCTION(vips_image_get_fields);
 ZEND_FUNCTION(vips_error_buffer);
 ZEND_FUNCTION(vips_cache_set_max);
 ZEND_FUNCTION(vips_cache_set_max_mem);
@@ -174,6 +177,7 @@ static const zend_function_entry ext_functions[] = {
 	ZEND_FE(vips_type_from_name, arginfo_vips_type_from_name)
 	ZEND_FE(vips_image_set_type, arginfo_vips_image_set_type)
 	ZEND_FE(vips_image_remove, arginfo_vips_image_remove)
+	ZEND_FE(vips_image_get_fields, arginfo_vips_image_get_fields)
 	ZEND_FE(vips_error_buffer, arginfo_vips_error_buffer)
 	ZEND_FE(vips_cache_set_max, arginfo_vips_cache_set_max)
 	ZEND_FE(vips_cache_set_max_mem, arginfo_vips_cache_set_max_mem)

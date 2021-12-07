@@ -94,6 +94,12 @@ function vips_image_set_type($image, string|int $type, string $field, mixed $val
  */
 function vips_image_remove($image, string $field): int {}
 
+/**
+ * @param resource $image
+ * @return array<string, mixed>|int
+ */
+function vips_image_get_fields($image): array|int {}
+
 function vips_error_buffer(): string {}
 
 function vips_cache_set_max(int $value): void {}
