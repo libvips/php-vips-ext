@@ -1,5 +1,12 @@
 vips extension changelog
 
+Version 1.0.13 (2022-2-xx)
+--------------------------
+	* php8 compatibility [kleisauke]
+	* improve module linking [kleisauke]
+	* improve packaging [kleisauke]
+	* add type hints [jcupitt, kleisauke]
+
 Version 1.0.12 (2020-8-xx)
 --------------------------
 	* vips_image_set_type() can be passed a type name

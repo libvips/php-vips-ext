@@ -15,9 +15,9 @@ http://pear.php.net/dtd/package-2.0.xsd">
   <email>jcupitt@php.net</email>
   <active>yes</active>
  </lead>
- <date>2020-08-29</date>
+ <date>2022-02-16</date>
  <version>
-  <release>1.0.12</release>
+  <release>1.0.13</release>
   <api>1.0.0</api>
  </version>
  <stability>
@@ -26,7 +26,10 @@ http://pear.php.net/dtd/package-2.0.xsd">
  </stability>
  <license filesource="LICENSE.txt">MIT</license>
  <notes>
-	* vips_image_set_type() can be passed a type name
+	* php8 compatibility [kleisauke]
+	* improve module linking [kleisauke]
+	* improve packaging [kleisauke]
+	* add type hints [jcupitt, kleisauke]
  </notes>
  <contents>
   <dir name="/">
@@ -34,7 +37,7 @@ http://pear.php.net/dtd/package-2.0.xsd">
    <file role='doc' name='CREDITS'/>
    <file role='doc' name='LICENSE.txt'/>
    <file role='doc' name='README.md'/>
-   <file role='doc' name='RELEASE-1.0.12'/>
+   <file role='doc' name='RELEASE-1.0.13'/>
    <file role='doc' name='ChangeLog'/>
 
    <file role='src' name='config.m4'/>
@@ -109,6 +112,18 @@ http://pear.php.net/dtd/package-2.0.xsd">
   <configureoption name="with-vips" default="yes" prompt="enable vips"/>
  </extsrcrelease>
  <changelog>
+
+  <release>
+   <stability><release>stable</release><api>stable</api></stability>
+   <version><release>1.0.13</release><api>1.0.0</api></version>
+   <date>2022-02-16</date>
+   <notes>
+	* php8 compatibility [kleisauke]
+	* improve module linking [kleisauke]
+	* improve packaging [kleisauke]
+	* add type hints [jcupitt, kleisauke]
+   </notes>
+  </release>
 
   <release>
    <stability><release>stable</release><api>stable</api></stability>

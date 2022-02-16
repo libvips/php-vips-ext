@@ -1,7 +1,7 @@
 # Low-level PHP binding for libvips 
 
 This extension lets you use the libvips image processing library
-from PHP 7. 
+from PHP 7 and PHP 8. 
 
 This is not supposed to be used directly! Install this, then use 
 [php-vips](https://github.com/libvips/php-vips) to layer a nice (and
@@ -19,6 +19,7 @@ memory.
 #!/usr/bin/env php
 <?php
 
+# never use this extension directly! this is just an example
 $x = vips_image_new_from_file($argv[1])["out"];
 $x = vips_call("invert", $x)["out"];
 vips_image_write_to_file($x, $argv[2]);
@@ -94,7 +95,7 @@ libvips website, or build your own.
 $ pear package
 ```
 
-To make `vips-1.0.12.tgz`.
+To make `vips-1.0.13.tgz`.
 
 To install by hand:
 
