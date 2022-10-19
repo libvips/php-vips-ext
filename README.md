@@ -3,7 +3,7 @@
 **This extension is deprecated** php-vips 2.0+ has switched to FFI for calls
 into the libvips binary, so this extension is no longer necessary. It will not
 be updated again (though it might still be useful if for some reason you don't
-/ can't update to phop-vips 2.0).
+/ can't update to php-vips 2.0).
 
 This extension lets you use the libvips image processing library
 from PHP 7 and PHP 8. 
