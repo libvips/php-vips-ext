@@ -9,7 +9,7 @@ This extension lets you use the libvips image processing library
 from PHP 7 and PHP 8. 
 
 This is not supposed to be used directly! Install this, then use 
-[php-vips](https://github.com/libvips/php-vips) to layer a nice (and
+[php-vips 1.x](https://github.com/libvips/php-vips) to layer a nice (and
 documented!) API on top of this extension.
 
 libvips is fast and needs little memory. The [`vips-php-bench`](
