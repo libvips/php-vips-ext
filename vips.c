@@ -1803,7 +1803,6 @@ PHP_FUNCTION(vips_type_from_name)
 {
 	char *name;
 	size_t name_len;
-	GType gtype;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS(), "s", 
 		&name, &name_len) == FAILURE) {
