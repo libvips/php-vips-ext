@@ -1803,7 +1803,6 @@ PHP_FUNCTION(vips_type_from_name)
 {
 	char *name;
 	size_t name_len;
-	GType gtype;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS(), "s", 
 		&name, &name_len) == FAILURE) {
@@ -1973,7 +1972,7 @@ PHP_FUNCTION(vips_version)
 {
 	char digits[256];
 
-	vips_snprintf(digits, 256, "%d.%d.%d", vips_version(0), vips_version(1), vips_version(2));
+	snprintf(digits, 256, "%d.%d.%d", vips_version(0), vips_version(1), vips_version(2));
 
 	RETVAL_STRING(digits);
 }
@@ -2119,37 +2118,37 @@ PHP_MINFO_FUNCTION(vips)
 	php_info_print_table_start();
 	php_info_print_table_header(2, "vips property", "value");
 
-	vips_snprintf(digits, 256, "%d.%d.%d", VIPS_MAJOR_VERSION, VIPS_MINOR_VERSION, VIPS_MICRO_VERSION);
+	snprintf(digits, 256, "%d.%d.%d", VIPS_MAJOR_VERSION, VIPS_MINOR_VERSION, VIPS_MICRO_VERSION);
 	php_info_print_table_row(2, "Vips headers version", digits);
-	vips_snprintf(digits, 256, "%d.%d.%d", vips_version(0), vips_version(1), vips_version(2));
+	snprintf(digits, 256, "%d.%d.%d", vips_version(0), vips_version(1), vips_version(2));
 	php_info_print_table_row(2, "Vips library version", digits);
-	vips_snprintf(digits, 256, "%d.%d.%d", vips_version(3), vips_version(4), vips_version(5));
+	snprintf(digits, 256, "%d.%d.%d", vips_version(3), vips_version(4), vips_version(5));
 	php_info_print_table_row(2, "Vips ABI version", digits);
 
-	vips_snprintf(digits, 256, "%d", vips_version(0));
+	snprintf(digits, 256, "%d", vips_version(0));
 	php_info_print_table_row(2, "Major version", digits); 
-	vips_snprintf(digits, 256, "%d", vips_version(1));
+	snprintf(digits, 256, "%d", vips_version(1));
 	php_info_print_table_row(2, "Minor version", digits); 
-	vips_snprintf(digits, 256, "%d", vips_version(2));
+	snprintf(digits, 256, "%d", vips_version(2));
 	php_info_print_table_row(2, "Micro version", digits); 
 
-	vips_snprintf(digits, 256, "%zd", vips_cache_get_max_mem());
+	snprintf(digits, 256, "%zd", vips_cache_get_max_mem());
 	php_info_print_table_row(2, "Cache max mem", digits);
-	vips_snprintf(digits, 256, "%d", vips_cache_get_max());
+	snprintf(digits, 256, "%d", vips_cache_get_max());
 	php_info_print_table_row(2, "Cache max operations", digits);
-	vips_snprintf(digits, 256, "%d", vips_cache_get_size());
+	snprintf(digits, 256, "%d", vips_cache_get_size());
 	php_info_print_table_row(2, "Cache current operations", digits);
-	vips_snprintf(digits, 256, "%d", vips_cache_get_max_files());
+	snprintf(digits, 256, "%d", vips_cache_get_max_files());
 	php_info_print_table_row(2, "Cache max open files", digits);
 
-	vips_snprintf(digits, 256, "%d", vips_tracked_get_allocs());
+	snprintf(digits, 256, "%d", vips_tracked_get_allocs());
 	php_info_print_table_row(2, "Memory allocations", digits);
-	vips_snprintf(digits, 256, "%zd", vips_tracked_get_mem());
+	snprintf(digits, 256, "%zd", vips_tracked_get_mem());
 	php_info_print_table_row(2, "Memory currently allocated", digits);
-	vips_snprintf(digits, 256, "%zd", vips_tracked_get_mem_highwater());
+	snprintf(digits, 256, "%zd", vips_tracked_get_mem_highwater());
 	php_info_print_table_row(2, "Memory high water", digits);
 
-	vips_snprintf(digits, 256, "%d", vips_concurrency_get());
+	snprintf(digits, 256, "%d", vips_concurrency_get());
 	php_info_print_table_row(2, "Concurrency", digits);
 
 	php_info_print_table_row(2, "SIMD support with liborc",
